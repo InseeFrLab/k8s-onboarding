@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useRecoilState } from 'recoil';
 import API from 'api';
 import { confState } from 'store';
+import D from 'i18n';
 
 const App = () => {
 	const [conf, setConf] = useRecoilState(confState);
@@ -11,10 +12,10 @@ const App = () => {
 			setConf(r);
 		});
 	}, [setConf]);
-	console.log(conf);
+
 	return (
 		<div className="app" data-testid="app">
-			Hello
+			{D.appTitle}
 		</div>
 	);
 };
