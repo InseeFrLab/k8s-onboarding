@@ -17,7 +17,7 @@ const PrivateRoute = ({
 	const { keycloak } = useKeycloak();
 
 	useEffect(() => {
-		keycloak?.login();
+		if (!keycloak?.authenticated) keycloak?.login();
 	}, [keycloak]);
 
 	if (keycloak?.authenticated)
@@ -28,17 +28,13 @@ const PrivateRoute = ({
 					keycloak?.authenticated ? (
 						<Component {...props} />
 					) : (
-						<Redirect
-							to={{
-								pathname: '/login',
-								state: { from: props.location },
-							}}
-						/>
+						<div>Loading...</div>
 					)
 				}
 			/>
 		);
-	return <div>loading...</div>;
+
+	return null;
 };
 
 export default PrivateRoute;

@@ -6,15 +6,13 @@ import D from 'i18n';
 import Root from './root';
 
 const App = () => {
-	const [conf, setConf] = useRecoilState(confState);
+	const setConf = useRecoilState(confState)[1];
 
 	useEffect(() => {
 		API.conf.then((r) => {
 			setConf(r);
 		});
 	}, [setConf]);
-
-	console.log(conf);
 
 	return (
 		<div className="app" data-testid="app">
