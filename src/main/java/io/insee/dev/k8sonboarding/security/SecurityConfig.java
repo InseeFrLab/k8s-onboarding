@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
 import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
@@ -36,9 +37,13 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
                 .httpBasic().disable()
                 .csrf().disable()
                 .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(authenticationEntryPoint())
+                .and()
+                .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
                 .authorizeRequests()
-                .antMatchers("/static/**","/public/**").permitAll()
-                .anyRequest().permitAll();
+                .antMatchers("/api","/swagger-ui/**","/v3/api-docs/**","/static/**","/public/**","index.html","/","manifest.json","favicon.ico","robots.txt").permitAll()
+                .anyRequest().authenticated();
     }
 
     @Bean
