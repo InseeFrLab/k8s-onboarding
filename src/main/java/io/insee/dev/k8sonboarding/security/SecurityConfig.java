@@ -7,17 +7,9 @@ import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticatio
 import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter;
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy;
@@ -33,17 +25,13 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .httpBasic().disable()
-                .csrf().disable()
+        http.httpBasic().disable().csrf().disable()
                 .addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class)
-                .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint())
-                .and()
-                .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class)
-                .authorizeRequests()
-                .antMatchers("/api","/swagger-ui/**","/v3/api-docs/**","/static/**","/public/**","index.html","/","manifest.json","favicon.ico","robots.txt").permitAll()
-                .anyRequest().authenticated();
+                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and()
+                .addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class).authorizeRequests()
+                .antMatchers("/api", "/swagger-ui/**", "/v3/api-docs/**", "/static/**", "/public/**", "index.html", "/",
+                        "manifest.json", "favicon.ico", "robots.txt")
+                .permitAll().anyRequest().authenticated();
     }
 
     @Bean
