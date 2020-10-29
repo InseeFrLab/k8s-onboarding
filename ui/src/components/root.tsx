@@ -9,7 +9,6 @@ import {
 import Cluster from './cluster/cluster';
 import PrivateRoute from './commons/private-route';
 import Home from './home/home';
-import LoginPage from './Login/login';
 
 const Root = () => {
 	const { initialized } = useKeycloak();
@@ -21,9 +20,8 @@ const Root = () => {
 	return (
 		<Router>
 			<Switch>
-				<PrivateRoute exact path="/cluster" component={Cluster} />
 				<Route exact path="/" component={Home} />
-				<Route exact path="/login" component={LoginPage} />
+				<PrivateRoute exact path="/cluster" component={Cluster} />
 				<Redirect to="/" />
 			</Switch>
 		</Router>

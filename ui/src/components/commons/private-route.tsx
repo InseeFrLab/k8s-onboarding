@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Redirect, RouteComponentProps } from 'react-router-dom';
+import { Route, RouteComponentProps } from 'react-router-dom';
 import type { RouteProps } from 'react-router-dom';
 
 import { useKeycloak } from '@react-keycloak/web';
@@ -17,7 +17,7 @@ const PrivateRoute = ({
 	const { keycloak } = useKeycloak();
 
 	useEffect(() => {
-		keycloak?.login();
+		if (!keycloak?.authenticated) keycloak?.login();
 	}, [keycloak]);
 
 	if (keycloak?.authenticated)
@@ -28,17 +28,13 @@ const PrivateRoute = ({
 					keycloak?.authenticated ? (
 						<Component {...props} />
 					) : (
-						<Redirect
-							to={{
-								pathname: '/login',
-								state: { from: props.location },
-							}}
-						/>
+						<div>Loading...</div>
 					)
 				}
 			/>
 		);
-	return <div>loading...</div>;
+
+	return null;
 };
 
 export default PrivateRoute;
