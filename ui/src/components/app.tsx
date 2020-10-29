@@ -3,6 +3,7 @@ import { useRecoilState } from 'recoil';
 import API from 'api';
 import { confState } from 'store';
 import D from 'i18n';
+import Root from './root';
 
 const App = () => {
 	const [conf, setConf] = useRecoilState(confState);
@@ -13,9 +14,12 @@ const App = () => {
 		});
 	}, [setConf]);
 
+	console.log(conf);
+
 	return (
 		<div className="app" data-testid="app">
 			{D.appTitle}
+			<Root />
 		</div>
 	);
 };
