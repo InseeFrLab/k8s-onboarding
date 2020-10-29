@@ -2,7 +2,6 @@ package io.insee.dev.k8sonboarding.security;
 
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,28 +27,28 @@ public class SwaggerConfiguration {
 
     @Bean
     public OpenAPI customOpenAPIKeycloak() {
-        final OpenAPI openapi = createOpenAPI();
-        openapi.components(new Components().addSecuritySchemes(SCHEMEKEYCLOAK, new SecurityScheme()
-                .type(SecurityScheme.Type.OAUTH2).in(SecurityScheme.In.HEADER).description("Authentification keycloak")
-                .flows(new OAuthFlows().authorizationCode(new OAuthFlow()
-                        .authorizationUrl(keycloakUrl + "/realms/" + realmName + "/protocol/openid-connect/auth")
-                        .tokenUrl(keycloakUrl + "/realms/" + realmName + "/protocol/openid-connect/token")))));
-        return openapi;
+	final OpenAPI openapi = createOpenAPI();
+	openapi.components(new Components().addSecuritySchemes(SCHEMEKEYCLOAK, new SecurityScheme()
+		.type(SecurityScheme.Type.OAUTH2).in(SecurityScheme.In.HEADER).description("Authentification keycloak")
+		.flows(new OAuthFlows().authorizationCode(new OAuthFlow()
+			.authorizationUrl(keycloakUrl + "/realms/" + realmName + "/protocol/openid-connect/auth")
+			.tokenUrl(keycloakUrl + "/realms/" + realmName + "/protocol/openid-connect/token")))));
+	return openapi;
     }
 
     private OpenAPI createOpenAPI() {
-        final OpenAPI openapi = new OpenAPI().info(new Info().title("OnBoarding-api")
-                .description("This api allow to get credentials to access to a kubernetes cluster")
-                .contact(new Contact().name("InseeFrLab").url("https://github.com/InseeFrLab/k8s-onboarding")));
-        return openapi;
+	final OpenAPI openapi = new OpenAPI().info(new Info().title("OnBoarding-api")
+		.description("This api allow to get credentials to access to a kubernetes cluster")
+		.contact(new Contact().name("InseeFrLab").url("https://github.com/InseeFrLab/k8s-onboarding")));
+	return openapi;
     }
 
     // permet d'ajouter le header Authorization aux header qui vont bien, ici on
     // l'ajoute que au methode qui ne sont pas sur /api/public/** */
     @Bean
     public OperationCustomizer ajouterKeycloak() {
-        return (operation, handlerMethod) -> {
-            return operation.addSecurityItem(new SecurityRequirement().addList(SCHEMEKEYCLOAK));
-        };
+	return (operation, handlerMethod) -> {
+	    return operation.addSecurityItem(new SecurityRequirement().addList(SCHEMEKEYCLOAK));
+	};
     }
 }

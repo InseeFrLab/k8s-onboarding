@@ -1,7 +1,5 @@
 package io.insee.dev.k8sonboarding.model;
 
-import org.keycloak.representations.AccessToken;
-
 public class User {
 
     private String id;
@@ -9,18 +7,18 @@ public class User {
     private String authToken;
 
     public String getId() {
-        return id;
+	return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+	this.id = id;
     }
 
     public String getAuthToken() {
-        return authToken;
+	return authToken;
     }
 
     public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+	this.authToken = authToken;
     }
 }
