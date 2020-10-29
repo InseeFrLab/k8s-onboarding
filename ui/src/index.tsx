@@ -4,11 +4,15 @@ import { RecoilRoot } from 'recoil';
 import App from 'components/app';
 import reportWebVitals from './reportWebVitals';
 import './index.scss';
+import { ReactKeycloakProvider } from '@react-keycloak/web';
+import keycloak from 'keycloak';
 
 ReactDOM.render(
 	<React.StrictMode>
 		<RecoilRoot>
-			<App />
+			<ReactKeycloakProvider authClient={keycloak}>
+				<App />
+			</ReactKeycloakProvider>
 		</RecoilRoot>
 	</React.StrictMode>,
 	document.getElementById('root')
