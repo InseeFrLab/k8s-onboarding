@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { useCallback } from 'react';
 import { Redirect, useLocation } from 'react-router-dom';
 
 import { useKeycloak } from '@react-keycloak/web';

@@ -14,6 +14,8 @@ const App = () => {
 		});
 	}, [setConf]);
 
+	console.log(conf);
+
 	return (
 		<div className="app" data-testid="app">
 			{D.appTitle}

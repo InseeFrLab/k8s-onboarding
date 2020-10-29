@@ -1,10 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-	Route,
-	Redirect,
-	RouteComponentProps,
-	useLocation,
-} from 'react-router-dom';
+import { Route, Redirect, RouteComponentProps } from 'react-router-dom';
 import type { RouteProps } from 'react-router-dom';
 
 import { useKeycloak } from '@react-keycloak/web';
