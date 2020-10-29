@@ -46,7 +46,6 @@ public class SwaggerConfiguration {
 
     // permet d'ajouter le header Authorization aux header qui vont bien, ici on
     // l'ajoute que au methode qui ne sont pas sur /api/public/** */
-    @ConditionalOnProperty(name = "com.example.demo.auth.type", havingValue = "keycloak", matchIfMissing = true)
     @Bean
     public OperationCustomizer ajouterKeycloak() {
         return (operation, handlerMethod) -> {
