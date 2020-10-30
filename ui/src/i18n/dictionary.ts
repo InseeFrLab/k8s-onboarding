@@ -13,4 +13,6 @@ export const dictionary = {
 	loading: { fr: 'Chargement ...', en: 'Loading...' },
 	login: { fr: 'Se connecter', en: 'Login' },
 	logout: { fr: 'Se déconnecter', en: 'Logout' },
+	cardIdTitle: { fr: 'Identifiants', en: 'Identifiers' },
+	cardDocTitle: { fr: 'Documentation', en: 'Documentation' },
 };
