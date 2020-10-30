@@ -20,7 +20,7 @@ public class ConfigurationController {
     @Autowired
     ClusterProperties clusterProperties;
 
-    @Autowireds
+    @Autowired
     UiProperties uiProperties;
 
     @GetMapping
