@@ -1,11 +1,14 @@
-interface API {
-	conf: Promise<any>;
-}
+import getEnv from 'env';
+import { API } from '../api';
 
-const get = (url: string) => fetch(url).then((r) => r.json());
+const buildUrl = (url: string) =>
+	`${getEnv('REACT_APP_API_BASE_URL') || window.location.origin}/${url}`;
+
+const get = (url: string) => fetch(buildUrl(url)).then((r) => r.json());
 
 const api: API = {
-	conf: get(`${window.location.origin}/api/XXX`),
+	conf: get(`api/configuration`),
+	cluster: get(`api/cluster`),
 };
 
 export default api;
