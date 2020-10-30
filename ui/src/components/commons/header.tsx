@@ -8,7 +8,6 @@ import {
 	Divider,
 	Typography,
 	Grid,
-	Container,
 	Box,
 } from '@material-ui/core/';
 import Toolbar from '@material-ui/core/Toolbar';
