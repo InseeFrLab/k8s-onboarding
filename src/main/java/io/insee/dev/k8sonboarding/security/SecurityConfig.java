@@ -66,9 +66,9 @@ public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 		.addFilterBefore(keycloakAuthenticationProcessingFilter(), X509AuthenticationFilter.class)
 		.exceptionHandling().authenticationEntryPoint(authenticationEntryPoint()).and()
 		.addFilterBefore(keycloakPreAuthActionsFilter(), LogoutFilter.class).authorizeRequests()
-		.antMatchers("/api", "/api/public/*", "/swagger-ui/**", "/v3/api-docs/**", "/static/**", "/public/**",
-			"index.html", "/", "/manifest.json", "/favicon.ico", "/robots.txt")
-		.permitAll().anyRequest().authenticated();
+			.antMatchers("/api/public/**").permitAll()
+		.antMatchers("/api/**").authenticated()
+		.anyRequest().permitAll();
     }
 
     @Bean
