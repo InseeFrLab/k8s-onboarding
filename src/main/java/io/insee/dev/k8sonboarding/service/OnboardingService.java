@@ -38,7 +38,6 @@ public class OnboardingService {
 	final KubernetesClient client = new DefaultKubernetesClient();
 	final String namespaceId = "prefix" + "-" + user.getId();
 	final Namespace namespace = client.namespaces().withName(namespaceId).get();
-	System.out.println(namespace == null);
 	return namespace == null ? Boolean.FALSE : Boolean.TRUE;
     }
 }
