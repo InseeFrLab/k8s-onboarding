@@ -6,19 +6,21 @@ import {
 	Route,
 	Redirect,
 } from 'react-router-dom';
-import Cluster from './cluster/cluster';
-import PrivateRoute from './commons/private-route';
-import Home from './home/home';
+import PrivateRoute from './private-route';
+import Home from 'components/home';
+import Cluster from 'components/cluster';
+import { Header, Loader } from 'components/commons';
 
 const Root = () => {
 	const { initialized } = useKeycloak();
 
 	if (!initialized) {
-		return <div>Loading...</div>;
+		return <Loader />;
 	}
 
 	return (
 		<Router>
+			<Header />
 			<Switch>
 				<Route exact path="/" component={Home} />
 				<PrivateRoute exact path="/cluster" component={Cluster} />
