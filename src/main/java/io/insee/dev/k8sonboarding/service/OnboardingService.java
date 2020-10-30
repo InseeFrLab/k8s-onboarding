@@ -32,7 +32,7 @@ public class OnboardingService {
   
 
     public void onboard(User user) {
-	final KubernetesClient client = new DefaultKubernetesClient();
+	try(final KubernetesClient client = new DefaultKubernetesClient()){
 	final String userId = user.getId();
 	final String namespaceId = clusterProperty.getNameSpaceId(user.getId());
 	final DoneableNamespace namespaceToCreate = client.namespaces().createNew().withNewMetadata()
@@ -48,12 +48,14 @@ public class OnboardingService {
 
 	namespaceToCreate.done();
 	bindingToCreate.done();
+	}
     }
 
     public Boolean checkNamespaceExists(User user) {
-	final KubernetesClient client = new DefaultKubernetesClient();
+	try(final KubernetesClient client = new DefaultKubernetesClient()){
     final String namespaceId = clusterProperty.getNameSpaceId(user.getId());
 	final Namespace namespace = client.namespaces().withName(namespaceId).get();
 	return namespace == null ? Boolean.FALSE : Boolean.TRUE;
+	}
     }
 }
