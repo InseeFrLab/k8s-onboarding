@@ -7,7 +7,7 @@ const api: API = {
 	conf: get({
 		authUrl: getEnv('REACT_APP_KEYCLOAK_URL'),
 		realm: getEnv('REACT_APP_KEYCLOAK_REALM'),
-		resource: getEnv('REACT_APP_KEYCLOAK_RESOURCE'),
+		clientId: getEnv('REACT_APP_KEYCLOAK_CLIENT_ID'),
 	}),
 	cluster: get({
 		name: 'google-cloud-demo',

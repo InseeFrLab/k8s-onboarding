@@ -18,7 +18,7 @@ const App = () => {
 				setLoading(false);
 			})
 			.catch(() => {
-				console.error('fetch configuration');
+				console.error('error while fetch configuration');
 			});
 	}, [setConf]);
 
