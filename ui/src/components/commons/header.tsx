@@ -2,9 +2,18 @@ import { useKeycloak } from '@react-keycloak/web';
 import D from 'i18n';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { AppBar } from '@material-ui/core/';
+import {
+	AppBar,
+	Button,
+	Divider,
+	Typography,
+	Grid,
+	Container,
+	Box,
+} from '@material-ui/core/';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
+import './header.scss';
 
 const Header = () => {
 	const {
@@ -25,18 +34,46 @@ const Header = () => {
 
 	return (
 		<>
-			<AppBar position="static">
+			<AppBar>
 				<Toolbar variant="dense">
-					<Typography variant="h6" color="inherit">
-						{D.appTitle}
-					</Typography>
+					<Grid
+						container
+						direction="row"
+						justify="space-between"
+						alignItems="center"
+					>
+						<Typography variant="h4" className="appbar_title">
+							{D.appTitle}
+						</Typography>
+						<Button
+							variant="outlined"
+							color="secondary"
+							startIcon={<PersonOutlineSharpIcon />}
+							onClick={action}
+						>
+							{label}
+						</Button>
+					</Grid>
 				</Toolbar>
 			</AppBar>
-			<button type="button" onClick={action}>
-				{label}
-			</button>
-			<h2>{D.appTitle}</h2>
-			<p>{D.appDescription}</p>
+			<Container className="container">
+				<Grid direction="column" justify="center" alignItems="baseline">
+					<Typography variant="h2" gutterBottom className="title">
+						{D.appTitle}
+					</Typography>
+					<Typography variant="body1" gutterBottom className="description">
+						{D.appDescription}
+					</Typography>
+					<Button
+						variant="outlined"
+						color="primary"
+						className="tutorial_button"
+					>
+						{D.header_button_tutorial}
+					</Button>
+				</Grid>
+			</Container>
+			<Divider className="divider" />
 		</>
 	);
 };
