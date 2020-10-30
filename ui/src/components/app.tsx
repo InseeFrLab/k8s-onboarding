@@ -8,9 +8,13 @@ const App = () => {
 	const setConf = useRecoilState(confState)[1];
 
 	useEffect(() => {
-		API.conf.then((r) => {
-			setConf(r);
-		});
+		API.conf()
+			.then((r) => {
+				setConf(r);
+			})
+			.catch(() => {
+				console.error('fetch configuration');
+			});
 	}, [setConf]);
 
 	return (
