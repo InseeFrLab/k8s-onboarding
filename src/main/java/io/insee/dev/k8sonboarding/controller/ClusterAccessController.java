@@ -1,13 +1,12 @@
 package io.insee.dev.k8sonboarding.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.insee.dev.k8sonboarding.property.ClusterProperty;
+import io.insee.dev.k8sonboarding.property.ClusterProperties;
 import io.insee.dev.k8sonboarding.security.UserProvider;
 import io.insee.dev.k8sonboarding.service.OnboardingService;
 
@@ -22,7 +21,7 @@ public class ClusterAccessController {
     private UserProvider userProvider;
 
     @Autowired
-    private ClusterProperty clusterProperty;
+    private ClusterProperties clusterProperty;
 
     @GetMapping
     public ClusterCredentials getCredentials() {
