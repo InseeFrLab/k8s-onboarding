@@ -6,11 +6,11 @@ const buildUrl = (url: string) =>
 
 const get = (url: string) => (token: string) =>
 	fetch(buildUrl(url), {
-		headers: { Authorization: `Bearer ${token}` },
+		headers: { Accept: 'application/json', Authorization: `Bearer ${token}` },
 	} as any).then((r) => r.json());
 
 const api: API = {
-	conf: get(`api/configuration`),
+	conf: get(`api/public/configuration`),
 	cluster: (token: string) => get(`api/cluster`)(token),
 };
 
