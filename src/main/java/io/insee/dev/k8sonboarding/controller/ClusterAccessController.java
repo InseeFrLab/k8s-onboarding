@@ -25,10 +25,10 @@ public class ClusterAccessController {
 
     @GetMapping
     public ClusterCredentials getCredentials() {
-      final ClusterCredentials credentials = new ClusterCredentials();
-      credentials.setToken(userProvider.getUser().getAuthToken());
-      credentials.setApiserverUrl(clusterProperty.getApiserverUrl());
-  	return credentials;
+	final ClusterCredentials credentials = new ClusterCredentials();
+	credentials.setToken(userProvider.getUser().getAuthToken());
+	credentials.setApiserverUrl(clusterProperty.getApiserverUrl());
+	return credentials;
     }
 
     @PostMapping
