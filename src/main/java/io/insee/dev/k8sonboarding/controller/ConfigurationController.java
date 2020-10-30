@@ -1,8 +1,5 @@
 package io.insee.dev.k8sonboarding.controller;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +14,47 @@ public class ConfigurationController {
     KeycloakSpringBootProperties keycloakSpringBootProperties;
 
     @GetMapping
-    public Map<String, String> getConfiguration() {
-	final Map<String, String> map = new HashMap<>();
-	map.put("auth", keycloakSpringBootProperties.getAuthServerUrl());
-	map.put("realm", keycloakSpringBootProperties.getRealm());
-	map.put("resource", keycloakSpringBootProperties.getResource());
-	return map;
+    public AppConfiguration getConfiguration() {
+	final AppConfiguration appConfiguration = new AppConfiguration();
+	appConfiguration.setAuthUrl(keycloakSpringBootProperties.getAuthServerUrl());
+	appConfiguration.setRealm(keycloakSpringBootProperties.getRealm());
+	appConfiguration.setResource(keycloakSpringBootProperties.getResource());
+	return appConfiguration;
+    }
+
+    public static class AppConfiguration {
+	private String authUrl;
+	private String realm;
+	private String resource;
+
+	public AppConfiguration() {
+	    super();
+	}
+
+	public String getAuthUrl() {
+	    return authUrl;
+	}
+
+	public void setAuthUrl(String authUrl) {
+	    this.authUrl = authUrl;
+	}
+
+	public String getRealm() {
+	    return realm;
+	}
+
+	public void setRealm(String realm) {
+	    this.realm = realm;
+	}
+
+	public String getResource() {
+	    return resource;
+	}
+
+	public void setResource(String resource) {
+	    this.resource = resource;
+	}
+
     }
 
 }
