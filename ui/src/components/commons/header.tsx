@@ -8,7 +8,6 @@ import {
 	Divider,
 	Typography,
 	Grid,
-	Container,
 	Box,
 } from '@material-ui/core/';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -57,8 +56,14 @@ const Header = () => {
 				</Toolbar>
 			</AppBar>
 			<Box m={10} />
-			<Container className="mycontainer">
-				<Grid direction="column" justify="center" alignItems="baseline">
+			<Grid
+				container
+				className="mycontainer"
+				justify="center"
+				alignItems="baseline"
+				direction="column"
+			>
+				<Grid>
 					<Typography variant="h2" gutterBottom className="title">
 						{D.appTitle}
 					</Typography>
@@ -66,7 +71,6 @@ const Header = () => {
 						{D.appDescription}
 					</Typography>
 					<Box m={2} />
-
 					<Button
 						variant="outlined"
 						color="primary"
@@ -76,7 +80,7 @@ const Header = () => {
 					</Button>
 				</Grid>
 				<Box m={2} />
-			</Container>
+			</Grid>
 			<Divider className="divider" />
 			<Box m={2} />
 		</>

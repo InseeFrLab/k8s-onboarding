@@ -3,12 +3,11 @@ import { MuiThemeProvider } from '@material-ui/core';
 import React from 'react';
 import {
 	BrowserRouter as Router,
-	Switch,
 	Route,
+	Switch,
 	Redirect,
 } from 'react-router-dom';
 import PrivateRoute from './private-route';
-import Home from 'components/home';
 import Cluster from 'components/cluster';
 import { Header, Loader } from 'components/commons';
 import Theme from './../material-ui-theme';
@@ -25,8 +24,8 @@ const Root = () => {
 			<Router>
 				<Header />
 				<Switch>
-					<Route exact path="/" component={Home} />
 					<PrivateRoute exact path="/cluster" component={Cluster} />
+					<Route exact path="/" component={() => <div />} />
 					<Redirect to="/" />
 				</Switch>
 			</Router>
