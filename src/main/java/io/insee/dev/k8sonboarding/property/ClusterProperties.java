@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix="io.insee.dev.k8sonboarding")
 public class ClusterProperties {
   
-  private String namespacePrefix = "dev-";
+  private String namespacePrefix;
   private String userPrefix;
-  private String nameNamespaceAdmin = "namespace_admin";
+  private String nameNamespaceAdmin;
   private String apiserverUrl;
   
   public void setNamespacePrefix(String namespacePrefix) {
