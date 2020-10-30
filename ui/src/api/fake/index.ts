@@ -1,6 +1,6 @@
 import { API } from '../api';
 
-const get = (data: any) => Promise.resolve(data);
+const get = (data: any) => () => Promise.resolve(data);
 
 const api: API = {
 	conf: get({ test: 'test' }),

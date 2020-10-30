@@ -1,4 +1,4 @@
 export interface API {
-	conf: Promise<any>;
-	cluster: Promise<any>;
+	conf: (string?) => Promise<any>;
+	cluster: (string?) => Promise<any>;
 }
