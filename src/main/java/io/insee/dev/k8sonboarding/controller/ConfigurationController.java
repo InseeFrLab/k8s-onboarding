@@ -18,14 +18,11 @@ public class ConfigurationController {
 
     @GetMapping
     public Map<String, String> getConfiguration() {
-	return this.mapPropertiesToPublish();
-    }
-
-    private Map<String, String> mapPropertiesToPublish() {
 	final Map<String, String> map = new HashMap<>();
 	map.put("auth", keycloakSpringBootProperties.getAuthServerUrl());
 	map.put("realm", keycloakSpringBootProperties.getRealm());
 	map.put("resource", keycloakSpringBootProperties.getResource());
 	return map;
     }
+
 }
