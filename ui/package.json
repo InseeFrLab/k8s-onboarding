@@ -20,7 +20,11 @@
 		"react-scripts": "4.0.0",
 		"recoil": "^0.0.13",
 		"typescript": "^4.0.3",
-		"web-vitals": "^0.2.4"
+		"web-vitals": "^0.2.4",
+		"@material-ui/core": "^4.11.0",
+		"@material-ui/icons": "^4.9.1",
+		"@material-ui/styles": "^4.10.0",
+		"@types/material-ui": "^0.21.8"
 	},
 	"scripts": {
 		"start": "react-scripts start",

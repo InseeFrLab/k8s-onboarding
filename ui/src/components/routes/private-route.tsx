@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { Route, RouteComponentProps } from 'react-router-dom';
 import type { RouteProps } from 'react-router-dom';
-
 import { useKeycloak } from '@react-keycloak/web';
+import { Loader } from 'components/commons';
 
 interface PrivateRouteParams extends RouteProps {
 	component:
@@ -25,11 +25,7 @@ const PrivateRoute = ({
 			<Route
 				{...rest}
 				render={(props: any) =>
-					keycloak?.authenticated ? (
-						<Component {...props} />
-					) : (
-						<div>Loading...</div>
-					)
+					keycloak?.authenticated ? <Component {...props} /> : <Loader />
 				}
 			/>
 		);
