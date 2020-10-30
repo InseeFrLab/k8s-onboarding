@@ -9,7 +9,7 @@ const App = () => {
 
 	useEffect(() => {
 		API.conf()
-			.then((r) => {
+			.then((r: any) => {
 				setConf(r);
 			})
 			.catch(() => {

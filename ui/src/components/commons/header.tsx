@@ -56,7 +56,8 @@ const Header = () => {
 					</Grid>
 				</Toolbar>
 			</AppBar>
-			<Container className="container">
+			<Box m={10} />
+			<Container className="mycontainer">
 				<Grid direction="column" justify="center" alignItems="baseline">
 					<Typography variant="h2" gutterBottom className="title">
 						{D.appTitle}
@@ -64,6 +65,8 @@ const Header = () => {
 					<Typography variant="body1" gutterBottom className="description">
 						{D.appDescription}
 					</Typography>
+					<Box m={2} />
+
 					<Button
 						variant="outlined"
 						color="primary"
@@ -72,8 +75,10 @@ const Header = () => {
 						{D.header_button_tutorial}
 					</Button>
 				</Grid>
+				<Box m={2} />
 			</Container>
 			<Divider className="divider" />
+			<Box m={2} />
 		</>
 	);
 };
