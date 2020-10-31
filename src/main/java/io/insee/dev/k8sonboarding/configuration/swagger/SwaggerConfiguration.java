@@ -1,4 +1,4 @@
-package io.insee.dev.k8sonboarding.security;
+package io.insee.dev.k8sonboarding.configuration.swagger;
 
 import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.beans.factory.annotation.Value;

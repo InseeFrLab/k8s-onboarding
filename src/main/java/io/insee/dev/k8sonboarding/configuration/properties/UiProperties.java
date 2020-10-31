@@ -1,4 +1,4 @@
-package io.insee.dev.k8sonboarding.property;
+package io.insee.dev.k8sonboarding.configuration.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
