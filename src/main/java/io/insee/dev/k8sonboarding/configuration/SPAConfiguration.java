@@ -1,4 +1,4 @@
-package io.insee.dev.k8sonboarding.security;
+package io.insee.dev.k8sonboarding.configuration;
 
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
