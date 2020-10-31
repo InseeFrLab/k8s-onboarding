@@ -12,6 +12,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	http.httpBasic().disable().csrf().disable()
 	    .authorizeRequests()
 			.antMatchers("/api/public/**").permitAll()
+			.antMatchers("/api","/api/").permitAll() // For swagger-ui redirection
 		    .antMatchers("/api/**").authenticated()
 		    .anyRequest().permitAll()
 		.and()
