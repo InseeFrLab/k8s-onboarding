@@ -17,22 +17,22 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 @Configuration
 public class SwaggerConfiguration {
 
-    @Value("${keycloak.auth-server-url}")
-    public String keycloakUrl;
+    @Value("${io.insee.dev.k8sonboarding.swagger.oauth2.authUrl}")
+    public String authUrl;
 
-    @Value("${keycloak.realm}")
-    public String realmName;
+    @Value("${io.insee.dev.k8sonboarding.swagger.oauth2.tokenUrl}")
+    public String tokenUrl;
 
-    public final String SCHEMEKEYCLOAK = "oAuthScheme";
+    public final String SCHEME = "oAuthScheme";
 
     @Bean
-    public OpenAPI customOpenAPIKeycloak() {
+    public OpenAPI customOpenAPIOauth2() {
 	final OpenAPI openapi = createOpenAPI();
-	openapi.components(new Components().addSecuritySchemes(SCHEMEKEYCLOAK, new SecurityScheme()
-		.type(SecurityScheme.Type.OAUTH2).in(SecurityScheme.In.HEADER).description("Authentification keycloak")
+	openapi.components(new Components().addSecuritySchemes(SCHEME, new SecurityScheme()
+		.type(SecurityScheme.Type.OAUTH2).in(SecurityScheme.In.HEADER).description("Authentification Oauth2")
 		.flows(new OAuthFlows().authorizationCode(new OAuthFlow()
-			.authorizationUrl(keycloakUrl + "/realms/" + realmName + "/protocol/openid-connect/auth")
-			.tokenUrl(keycloakUrl + "/realms/" + realmName + "/protocol/openid-connect/token")))));
+			.authorizationUrl(authUrl)
+			.tokenUrl(tokenUrl)))));
 	return openapi;
     }
 
@@ -46,9 +46,9 @@ public class SwaggerConfiguration {
     // permet d'ajouter le header Authorization aux header qui vont bien, ici on
     // l'ajoute que au methode qui ne sont pas sur /api/public/** */
     @Bean
-    public OperationCustomizer ajouterKeycloak() {
+    public OperationCustomizer addSecurity() {
 	return (operation, handlerMethod) -> {
-	    return operation.addSecurityItem(new SecurityRequirement().addList(SCHEMEKEYCLOAK));
+	    return operation.addSecurityItem(new SecurityRequirement().addList(SCHEME));
 	};
     }
 }
