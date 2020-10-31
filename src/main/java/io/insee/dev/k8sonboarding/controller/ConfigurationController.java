@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.insee.dev.k8sonboarding.property.ClusterProperties;
-import io.insee.dev.k8sonboarding.property.UiProperties;
+import io.insee.dev.k8sonboarding.configuration.properties.ClusterProperties;
+import io.insee.dev.k8sonboarding.configuration.properties.UiProperties;
 import io.insee.dev.k8sonboarding.view.AppConfiguration;
 
 @RestController

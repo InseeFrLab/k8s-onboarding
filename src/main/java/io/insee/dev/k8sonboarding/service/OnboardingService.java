@@ -10,53 +10,56 @@ import io.fabric8.kubernetes.api.model.DoneableNamespace;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.rbac.DoneableRoleBinding;
 import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
-import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.insee.dev.k8sonboarding.configuration.properties.ClusterProperties;
 import io.insee.dev.k8sonboarding.model.User;
-import io.insee.dev.k8sonboarding.property.ClusterProperties;
 import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 
 @Service
 public class OnboardingService {
 
-    private static final String CLUSTER_ADMIN = "cluster-admin";
-    private static final String API_GROUP = "rbac.authorization.k8s.io";
-    private static final String USER = "User";
-    private static final String LABEL_CREATED_BY = "created_by";
+    public static final String CLUSTER_ADMIN = "cluster-admin";
+    public static final String API_GROUP = "rbac.authorization.k8s.io";
+    public static final String USER = "User";
+    public static final String LABEL_CREATED_BY = "created_by";
     public static final String CLUSTER_ROLE = "ClusterRole";
 
     @Value("${spring.application.name:k8s-onboarding}")
     private String appName;
 
     @Autowired
-    private ClusterProperties clusterProperty;
+    ClusterProperties clusterProperty;
+
+    @Autowired
+    KubernetesClient kubernetesClient;
+
+    public OnboardingService(ClusterProperties clusterProperty, KubernetesClient kubernetesClient) {
+	super();
+	this.clusterProperty = clusterProperty;
+	this.kubernetesClient = kubernetesClient;
+    }
 
     public void onboard(User user) {
-	try (final KubernetesClient client = new DefaultKubernetesClient()) {
-	    final String userId = user.getId();
-	    final String namespaceId = getNameSpaceId(user.getId());
-	    final DoneableNamespace namespaceToCreate = client.namespaces().createNew().withNewMetadata()
-		    .withName(namespaceId).addToLabels(LABEL_CREATED_BY, appName).endMetadata();
+	final String userId = user.getId();
+	final String namespaceId = getNameSpaceId(user.getId());
+	final DoneableNamespace namespaceToCreate = this.kubernetesClient.namespaces().createNew().withNewMetadata()
+		.withName(namespaceId).addToLabels(LABEL_CREATED_BY, appName).endMetadata();
 
-	    final DoneableRoleBinding bindingToCreate = client.rbac().roleBindings().inNamespace(namespaceId)
-		    .createNew().withNewMetadata().withLabels(Map.of(LABEL_CREATED_BY, appName))
-		    .withName(clusterProperty.getNameNamespaceAdmin()).withNamespace(namespaceId).endMetadata()
-		    .withSubjects(new SubjectBuilder().withKind(USER).withName(userId).withApiGroup(API_GROUP)
-			    .withNamespace(namespaceId).build())
-		    .withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(CLUSTER_ADMIN)
-		    .endRoleRef();
+	final DoneableRoleBinding bindingToCreate = this.kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
+		.createNew().withNewMetadata().withLabels(Map.of(LABEL_CREATED_BY, appName))
+		.withName(clusterProperty.getNameNamespaceAdmin()).withNamespace(namespaceId).endMetadata()
+		.withSubjects(new SubjectBuilder().withKind(USER).withName(userId).withApiGroup(API_GROUP)
+			.withNamespace(namespaceId).build())
+		.withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(CLUSTER_ADMIN).endRoleRef();
 
-	    namespaceToCreate.done();
-	    bindingToCreate.done();
-	}
+	namespaceToCreate.done();
+	bindingToCreate.done();
     }
 
     public Boolean checkNamespaceExists(User user) {
-	try (final KubernetesClient client = new DefaultKubernetesClient()) {
-	    final String namespaceId = getNameSpaceId(user.getId());
-	    final Namespace namespace = client.namespaces().withName(namespaceId).get();
-	    return namespace == null ? Boolean.FALSE : Boolean.TRUE;
-	}
+	final String namespaceId = getNameSpaceId(user.getId());
+	final Namespace namespace = this.kubernetesClient.namespaces().withName(namespaceId).get();
+	return namespace == null ? Boolean.FALSE : Boolean.TRUE;
     }
 
     public ClusterCredentials getClusterCredentials(User user) {

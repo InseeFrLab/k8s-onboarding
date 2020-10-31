@@ -1,4 +1,4 @@
-package io.insee.dev.k8sonboarding.security;
+package io.insee.dev.k8sonboarding.configuration.security;
 
 import io.insee.dev.k8sonboarding.model.User;
 

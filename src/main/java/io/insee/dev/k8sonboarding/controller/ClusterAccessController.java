@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.insee.dev.k8sonboarding.security.UserProvider;
+import io.insee.dev.k8sonboarding.configuration.security.UserProvider;
 import io.insee.dev.k8sonboarding.service.OnboardingService;
 import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 
