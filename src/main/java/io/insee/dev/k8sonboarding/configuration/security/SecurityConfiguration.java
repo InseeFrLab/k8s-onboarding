@@ -1,4 +1,4 @@
-package io.insee.dev.k8sonboarding.security;
+package io.insee.dev.k8sonboarding.configuration.security;
 
 import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
@@ -28,7 +28,7 @@ import io.insee.dev.k8sonboarding.model.User;
 @KeycloakConfiguration
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
-public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
+public class SecurityConfiguration extends KeycloakWebSecurityConfigurerAdapter {
 
     @Override
     protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
