@@ -1,6 +1,5 @@
 package io.insee.dev.k8sonboarding.controller;
 
-import org.keycloak.adapters.springboot.KeycloakSpringBootProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,9 +14,6 @@ import io.insee.dev.k8sonboarding.view.AppConfiguration;
 public class ConfigurationController {
 
     @Autowired
-    KeycloakSpringBootProperties keycloakSpringBootProperties;
-
-    @Autowired
     ClusterProperties clusterProperties;
 
     @Autowired
@@ -25,12 +21,12 @@ public class ConfigurationController {
 
     @GetMapping
     public AppConfiguration getConfiguration() {
-	final AppConfiguration appConfiguration = new AppConfiguration();
-	appConfiguration.setAuthUrl(keycloakSpringBootProperties.getAuthServerUrl());
-	appConfiguration.setRealm(keycloakSpringBootProperties.getRealm());
-	appConfiguration.setResource(keycloakSpringBootProperties.getResource());
-	appConfiguration.setClientId(uiProperties.getClientId());
-	return appConfiguration;
+        final AppConfiguration appConfiguration = new AppConfiguration();
+        appConfiguration.setAuthUrl(uiProperties.getKeycloakUrl());
+        appConfiguration.setRealm(uiProperties.getKeycloakRealm());
+        appConfiguration.setResource(uiProperties.getClientId());
+        appConfiguration.setClientId(uiProperties.getClientId());
+        return appConfiguration;
     }
 
 }
