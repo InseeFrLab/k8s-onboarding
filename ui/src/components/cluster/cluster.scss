@@ -1,3 +1,5 @@
+@import 'index.scss';
+
 .name {
 	line-height: 28px;
 }
@@ -9,4 +11,18 @@
 
 .cards {
 	margin-top: 20px;
+}
+
+.card {
+	min-height: 27em;
+}
+
+.card-title {
+	color: $main-color;
+	display: inline;
+}
+
+.git-link {
+	text-decoration: none;
+	color: $main-color;
 }

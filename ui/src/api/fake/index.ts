@@ -10,10 +10,10 @@ const api: API = {
 		clientId: getEnv('REACT_APP_KEYCLOAK_CLIENT_ID'),
 	}),
 	cluster: get({
-		name: 'google-cloud-demo',
-		'api-server': 'https://oidc.dev.insee.io',
-		token: 'my-token',
-		script: 'script content',
+		apiserverUrl: 'api_server_url',
+		namespace: 'my_namespace',
+		token: 'my_token',
+		user: 'user',
 	}),
 };
 
