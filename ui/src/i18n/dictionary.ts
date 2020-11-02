@@ -15,4 +15,5 @@ export const dictionary = {
 		fr: 'Consulter la documentation et les liens utiles à votre déploiement',
 		en: 'See documentation and usefull links for your deployment',
 	},
+	copy: { fr: 'copier dans le presse papier', en: 'copy into clipboard' },
 };

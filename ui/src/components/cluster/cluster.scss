@@ -14,11 +14,12 @@
 }
 
 .card {
-	min-height: 18em;
+	min-height: 23em;
 }
 
 .card-title {
 	color: $main-color;
+	display: inline;
 }
 
 .git-link {

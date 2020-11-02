@@ -11,9 +11,6 @@ const Header = () => {
 			<Box m={10} />
 			<Grid container justify="center" alignItems="baseline" direction="column">
 				<Grid>
-					<Typography variant="h2" gutterBottom className="title">
-						{D.appTitle}
-					</Typography>
 					<Typography variant="body1" gutterBottom className="description">
 						{D.appDescription}
 					</Typography>

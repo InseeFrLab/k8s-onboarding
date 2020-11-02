@@ -6,7 +6,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Box from '@material-ui/core/Box';
-import { Loader } from 'components/commons';
+import { Loader, CopyableField } from 'components/commons';
 import API from 'api';
 import D from 'i18n';
 import './cluster.scss';
@@ -42,8 +42,14 @@ const Cluster = () => {
 						<CardHeader title={D.cardIdTitle} className="card-title" />
 						<Divider />
 						<CardContent>
-							{Object.entries(cluster).map((c: any) => (
-								<p key={c[0]}>{`${c[0]} : ${c[1]}`}</p>
+							{Object.entries(cluster).map((c: any, i) => (
+								<CopyableField
+									key={c[0]}
+									row={i}
+									label={c[0]}
+									value={c[1]}
+									copy
+								/>
 							))}
 						</CardContent>
 					</Card>
