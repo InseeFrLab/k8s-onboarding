@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
 import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { Loader } from 'components/commons';
 import API from 'api';
-import { confState } from 'store';
 import builDkeycloak from 'keycloak';
 import Root from './routes/root';
 
 const App = () => {
-	const [conf, setConf] = useRecoilState(confState);
+	const [conf, setConf] = useState({});
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
