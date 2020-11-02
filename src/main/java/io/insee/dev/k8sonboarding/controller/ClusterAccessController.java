@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import io.insee.dev.k8sonboarding.configuration.security.UserProvider;
 import io.insee.dev.k8sonboarding.model.User;
@@ -27,13 +25,19 @@ public class ClusterAccessController {
     @Value("${io.insee.dev.k8sonboarding.jwt.username-claim}")
 	private String usernameClaim;
 
-
     @GetMapping
     public ClusterCredentials getCredentials(Authentication auth) {
-        if (!onboardingService.checkNamespaceExists(userProvider.getUser(auth))) {
-            onboardingService.onboard(userProvider.getUser(auth));
-        }
         return onboardingService.getClusterCredentials(userProvider.getUser(auth));
+    }
+
+    @PostMapping("/namespace/{namespaceId}")
+    public void createNamespace(Authentication auth, @PathVariable String namespaceId) {
+        onboardingService.createNamespace(userProvider.getUser(auth), namespaceId);
+    }
+
+    @PostMapping("/namespace/{id}/permissions")
+    public void addPermissionsToNamespace(Authentication auth, @PathVariable String namespaceId) {
+        onboardingService.addPermissionsToNamespace(userProvider.getUser(auth), namespaceId);
     }
 
     @Bean

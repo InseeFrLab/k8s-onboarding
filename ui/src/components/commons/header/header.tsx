@@ -14,14 +14,14 @@ const Header = () => {
 					<Typography variant="body1" gutterBottom className="description">
 						{D.appDescription}
 					</Typography>
-					<Box m={2} />
-					<Button
+					{/*<Box m={2} />
+					 <Button
 						variant="outlined"
 						color="primary"
 						className="tutorial_button"
 					>
 						{D.header_button_tutorial}
-					</Button>
+					</Button> */}
 				</Grid>
 				<Box m={2} />
 			</Grid>

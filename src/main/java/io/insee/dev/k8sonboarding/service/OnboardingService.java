@@ -2,8 +2,10 @@ package io.insee.dev.k8sonboarding.service;
 
 import java.util.Map;
 
+import io.insee.dev.k8sonboarding.configuration.KubernetesClientProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import io.fabric8.kubernetes.api.model.DoneableNamespace;
@@ -31,35 +33,50 @@ public class OnboardingService {
     ClusterProperties clusterProperty;
 
     @Autowired
-    KubernetesClient kubernetesClient;
+	KubernetesClientProvider kubernetesClientProvider;
 
-    public OnboardingService(ClusterProperties clusterProperty, KubernetesClient kubernetesClient) {
+    public OnboardingService(ClusterProperties clusterProperty, KubernetesClientProvider kubernetesClientProvider) {
 	super();
 	this.clusterProperty = clusterProperty;
-	this.kubernetesClient = kubernetesClient;
+	this.kubernetesClientProvider = kubernetesClientProvider;
     }
 
-    public void onboard(User user) {
-	final String userId = user.getId();
-	final String namespaceId = getNameSpaceId(user.getId());
-	final DoneableNamespace namespaceToCreate = this.kubernetesClient.namespaces().createNew().withNewMetadata()
-		.withName(namespaceId).addToLabels(LABEL_CREATED_BY, appName).endMetadata();
+	/**
+	 * Currently, namespaceid is ignored
+	 * @param user
+	 * @param namespaceId
+	 */
+	public void createNamespace(User user, String namespaceId) {
+		namespaceId = getNameSpaceId(user.getId());
+		if (!checkNamespaceExists(namespaceId)) {
+			final DoneableNamespace namespaceToCreate = kubernetesClientProvider.getKubernetesClient().namespaces().createNew().withNewMetadata()
+					.withName(namespaceId).addToLabels(LABEL_CREATED_BY, appName).endMetadata();
+			namespaceToCreate.done();
+		}
+	}
 
-	final DoneableRoleBinding bindingToCreate = this.kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
-		.createNew().withNewMetadata().withLabels(Map.of(LABEL_CREATED_BY, appName))
-		.withName(clusterProperty.getNameNamespaceAdmin()).withNamespace(namespaceId).endMetadata()
-		.withSubjects(new SubjectBuilder().withKind(USER).withName(userId).withApiGroup(API_GROUP)
-			.withNamespace(namespaceId).build())
-		.withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(CLUSTER_ADMIN).endRoleRef();
+	/**
+	 * Currently, namespaceid is ignored
+	 * @param user
+	 * @param namespaceId
+	 */
+	public void addPermissionsToNamespace(User user, String namespaceId) {
+		namespaceId = getNameSpaceId(user.getId());
+		final String userId = getUserIdPrefixed(user.getId());
+		if (checkNamespaceExists(namespaceId)) {
+			final DoneableRoleBinding bindingToCreate = kubernetesClientProvider.getKubernetesClient().rbac().roleBindings().inNamespace(namespaceId)
+					.createNew().withNewMetadata().withLabels(Map.of(LABEL_CREATED_BY, appName))
+					.withName(clusterProperty.getNameNamespaceAdmin()).withNamespace(namespaceId).endMetadata()
+					.withSubjects(new SubjectBuilder().withKind(USER).withName(userId).withApiGroup(API_GROUP)
+							.withNamespace(namespaceId).build())
+					.withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(CLUSTER_ADMIN).endRoleRef();
+			bindingToCreate.done();
+		}
+	}
 
-	namespaceToCreate.done();
-	bindingToCreate.done();
-    }
-
-    public Boolean checkNamespaceExists(User user) {
-	final String namespaceId = getNameSpaceId(user.getId());
-	final Namespace namespace = this.kubernetesClient.namespaces().withName(namespaceId).get();
-	return namespace == null ? Boolean.FALSE : Boolean.TRUE;
+    public Boolean checkNamespaceExists(String namespaceId) {
+	final Namespace namespace = kubernetesClientProvider.getKubernetesClient().namespaces().withName(namespaceId).get();
+	return namespace != null;
     }
 
     public ClusterCredentials getClusterCredentials(User user) {
@@ -67,7 +84,7 @@ public class OnboardingService {
 	clusterCredentials.setApiserverUrl(clusterProperty.getApiserverUrl());
 	clusterCredentials.setNamespace(getNameSpaceId(user.getId()));
 	clusterCredentials.setToken(user.getAuthToken());
-	clusterCredentials.setUser(getUserPrefixId(user.getId()));
+	clusterCredentials.setUser(getUserIdPrefixed(user.getId()));
 	return clusterCredentials;
     }
 
@@ -75,7 +92,7 @@ public class OnboardingService {
 	return clusterProperty.getNamespacePrefix() + clusterProperty.getUserPrefix() + id;
     }
 
-    private String getUserPrefixId(String id) {
+    private String getUserIdPrefixed(String id) {
 	return clusterProperty.getUserPrefix() + id;
     }
 }
