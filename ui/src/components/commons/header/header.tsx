@@ -9,13 +9,7 @@ const Header = () => {
 		<>
 			<AppBar displayBtn />
 			<Box m={10} />
-			<Grid
-				container
-				className="mycontainer"
-				justify="center"
-				alignItems="baseline"
-				direction="column"
-			>
+			<Grid container justify="center" alignItems="baseline" direction="column">
 				<Grid>
 					<Typography variant="h2" gutterBottom className="title">
 						{D.appTitle}
