@@ -44,7 +44,7 @@ const CopyableField = ({ value, description, label, copy, row }: Props) => {
 					endAdornment={
 						<InputAdornment position="end">
 							{copy ? (
-								<IconButton aria-label={D.copy} onClick={onCopy}>
+								<IconButton aria-label={D.btnCopyLabel} onClick={onCopy}>
 									<FileCopy />
 								</IconButton>
 							) : null}

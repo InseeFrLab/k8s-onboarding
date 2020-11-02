@@ -15,5 +15,13 @@ export const dictionary = {
 		fr: 'Consulter la documentation et les liens utiles à votre déploiement',
 		en: 'See documentation and usefull links for your deployment',
 	},
-	copy: { fr: 'copier dans le presse papier', en: 'copy into clipboard' },
+	btnCopyLabel: {
+		fr: 'copier dans le presse papier',
+		en: 'copy into clipboard',
+	},
+	btnSaveAsLabel: { fr: 'Enregistrer', en: 'Save' },
+	exportKubLabel: {
+		fr: 'Accéder à kubernetes en dehors du datalab',
+		en: 'Access kubernetes outside the datalab',
+	},
 };

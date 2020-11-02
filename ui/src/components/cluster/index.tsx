@@ -6,13 +6,24 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
 import Box from '@material-ui/core/Box';
-import { Loader, CopyableField } from 'components/commons';
+import { Loader, CopyableField, ExportCredentials } from 'components/commons';
 import API from 'api';
+import { exportTypes } from 'utils';
 import D from 'i18n';
 import './cluster.scss';
 
+const fields = [
+	{
+		accessor: 'apiserverUrl',
+		label: 'API server URL',
+	},
+	{ accessor: 'namespace', label: 'Namespace' },
+	{ accessor: 'token', label: 'Token' },
+	{ accessor: 'user', label: 'User' },
+];
+
 const Cluster = () => {
-	const [cluster, setCluster] = useState({});
+	const [cluster, setCluster] = useState<any>({});
 	const [loading, setLoading] = useState(true);
 	const {
 		keycloak: { token, tokenParsed },
@@ -42,15 +53,22 @@ const Cluster = () => {
 						<CardHeader title={D.cardIdTitle} className="card-title" />
 						<Divider />
 						<CardContent>
-							{Object.entries(cluster).map((c: any, i) => (
+							{fields.map(({ accessor, label }: any, i) => (
 								<CopyableField
-									key={c[0]}
+									key={accessor}
 									row={i}
-									label={c[0]}
-									value={c[1]}
+									label={label}
+									value={cluster[accessor]}
 									copy
 								/>
 							))}
+							<div className="row row-major">
+								<ExportCredentials
+									text={D.exportKubLabel}
+									exportTypes={exportTypes}
+									credentials={cluster}
+								/>
+							</div>
 						</CardContent>
 					</Card>
 				</Grid>
