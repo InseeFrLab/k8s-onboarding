@@ -38,7 +38,7 @@ const Cluster = () => {
 			<Grid container className="cards" spacing={2}>
 				<Grid item lg={1} />
 				<Grid item lg={6} md={8} xs={12}>
-					<Card className="card">
+					<Card className="card" elevation={16}>
 						<CardHeader title={D.cardIdTitle} className="card-title" />
 						<Divider />
 						<CardContent>
@@ -49,10 +49,18 @@ const Cluster = () => {
 					</Card>
 				</Grid>
 				<Grid item lg={4} md={4} xs={12}>
-					<Card className="card">
+					<Card className="card" elevation={16}>
 						<CardHeader title={D.cardDocTitle} className="card-title" />
 						<Divider />
-						<CardContent>...</CardContent>
+						<CardContent>
+							<p>{D.docDescription}</p>
+							<a
+								href="https://git.stable.innovation.insee.eu"
+								className="git-link"
+							>
+								git.stable.innovation.insee.eu
+							</a>
+						</CardContent>
 					</Card>
 				</Grid>
 				<Grid item lg={1} />

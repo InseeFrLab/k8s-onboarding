@@ -11,4 +11,8 @@ export const dictionary = {
 	logout: { fr: 'Se déconnecter', en: 'Logout' },
 	cardIdTitle: { fr: 'Identifiants', en: 'Identifiers' },
 	cardDocTitle: { fr: 'Documentation', en: 'Documentation' },
+	docDescription: {
+		fr: 'Consulter la documentation et les liens utiles à votre déploiement',
+		en: 'See documentation and usefull links for your deployment',
+	},
 };
