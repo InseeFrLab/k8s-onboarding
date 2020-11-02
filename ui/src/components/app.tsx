@@ -3,6 +3,7 @@ import { ReactKeycloakProvider } from '@react-keycloak/web';
 import { Loader } from 'components/commons';
 import API from 'api';
 import builDkeycloak from 'keycloak';
+import AppBar from 'components/commons/appbar';
 import Root from './routes/root';
 
 const App = () => {
@@ -20,7 +21,13 @@ const App = () => {
 			});
 	}, [setConf]);
 
-	if (loading) return <Loader />;
+	if (loading)
+		return (
+			<>
+				<AppBar />
+				<Loader />
+			</>
+		);
 
 	return (
 		<div className="app" data-testid="app">
