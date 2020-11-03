@@ -44,17 +44,17 @@ function getButtonMessage() {
 	];
 }
 
-function getStepContent(stepIndex: number) {
+function getStepContent(stepIndex: number, cluster: any) {
 	switch (stepIndex) {
 		case 0:
-			return `Bienvenue sur la plateforme Kubernetes ${clusterName} !  
+			return `Bienvenue sur la plateforme Kubernetes ${cluster.apiserverUrl} !  
 Cette plateforme est soumise aux conditions d'utilisations suivantes :  
 * Aucune garantie de service que ce soit en confidentialité, intégrité ou disponibilité  
 * dsqdsd  `;
 		case 1:
 			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc se créer un espace personnel.  
-Pour simplifier, on va s'attribuer le namespace \`\`\`dev-xxxxxx\`\`\`'.  
-			Note : dans la vraie vie, c'est équivalent à kubectl create namespace dev-xxxxxx`;
+Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}'.  
+			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${cluster.namespace}`;
 		case 2:
 			return 'This is the bit I really care about!';
 		case 3:
@@ -67,22 +67,28 @@ Pour simplifier, on va s'attribuer le namespace \`\`\`dev-xxxxxx\`\`\`'.
 export default function Welcome() {
 	const classes = useStyles();
 	const [activeStep, setActiveStep] = React.useState(0);
+	const [cluster, setCluster] = useState<any>({});
 	const steps = getSteps();
 	const { push } = useHistory();
-
 	const {
 		keycloak: { token, tokenParsed },
 	} = useKeycloak();
+
+	React.useEffect(() => {
+		API.cluster(token).then((c) => {
+			setCluster(c);
+		});
+	}, [token]);
 
 	const handleNext = () => {
 		if (activeStep >= steps.length - 1) {
 			push('/cluster');
 		} else if (activeStep === 1) {
-			API.createNamespace(token, 'xxx').then((c) => {
+			API.createNamespace(token, cluster.namespace).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else if (activeStep === 2) {
-			API.setPermissionsToNamespace(token, 'xxx').then((c) => {
+			API.setPermissionsToNamespace(token, cluster.namespace).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else {
@@ -118,10 +124,12 @@ export default function Welcome() {
 				) : (
 					<div>
 						<Typography className={classes.instructions}>
-							<ReactMarkdown>{getStepContent(activeStep)}</ReactMarkdown>
+							<ReactMarkdown>
+								{getStepContent(activeStep, cluster)}
+							</ReactMarkdown>
 						</Typography>
 						<div>
-							{activeStep === 1 ? (
+							{activeStep !== 0 ? (
 								<Button
 									variant="contained"
 									color="secondary"
