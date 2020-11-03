@@ -102,10 +102,12 @@ public class OnboardingService {
 
     public ClusterCredentials getClusterCredentials(User user) {
 	final ClusterCredentials clusterCredentials = new ClusterCredentials();
+	final String namespaceId = getNameSpaceId(user.getId());
 	clusterCredentials.setApiserverUrl(clusterProperty.getApiserverUrl());
-	clusterCredentials.setNamespace(getNameSpaceId(user.getId()));
+	clusterCredentials.setNamespace(checkNamespaceExists(namespaceId) ? namespaceId : null);
 	clusterCredentials.setToken(user.getAuthToken());
 	clusterCredentials.setUser(getUserIdPrefixed(user.getId()));
+	clusterCredentials.setOnboarded(checkPermissionsExists(namespaceId,getUserIdPrefixed(user.getId())));
 	return clusterCredentials;
     }
 

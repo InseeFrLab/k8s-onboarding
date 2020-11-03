@@ -10,8 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router-dom';
 import API from 'api';
 import { useKeycloak } from '@react-keycloak/web';
-
-const clusterName = 'dev.insee.io';
+import Credentials from 'model/Credentials';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -67,28 +66,35 @@ Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}'.
 export default function Welcome() {
 	const classes = useStyles();
 	const [activeStep, setActiveStep] = React.useState(0);
-	const [cluster, setCluster] = useState<any>({});
+	const [credentials, setCredentials] = useState<Credentials>();
 	const steps = getSteps();
 	const { push } = useHistory();
 	const {
-		keycloak: { token, tokenParsed },
+		keycloak: { token },
 	} = useKeycloak();
 
 	React.useEffect(() => {
 		API.cluster(token).then((c) => {
-			setCluster(c);
+			if (c.onboarded) {
+				push('/cluster');
+			} else {
+				if (c.namespace) {
+					setActiveStep(2);
+				}
+				setCredentials(c);
+			}
 		});
-	}, [token]);
+	}, [token, push]);
 
 	const handleNext = () => {
 		if (activeStep >= steps.length - 1) {
 			push('/cluster');
 		} else if (activeStep === 1) {
-			API.createNamespace(token, cluster.namespace).then((c) => {
+			API.createNamespace(token, credentials?.namespace).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else if (activeStep === 2) {
-			API.setPermissionsToNamespace(token, cluster.namespace).then((c) => {
+			API.setPermissionsToNamespace(token, credentials?.namespace).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else {
@@ -103,6 +109,8 @@ export default function Welcome() {
 	const handleReset = () => {
 		setActiveStep(0);
 	};
+
+	if (!credentials) return <Loader />;
 
 	return (
 		<div className={classes.root}>
@@ -125,7 +133,7 @@ export default function Welcome() {
 					<div>
 						<Typography className={classes.instructions}>
 							<ReactMarkdown>
-								{getStepContent(activeStep, cluster)}
+								{getStepContent(activeStep, credentials)}
 							</ReactMarkdown>
 						</Typography>
 						<div>

@@ -11,7 +11,6 @@ import API from 'api';
 import { exportTypes } from 'utils';
 import D from 'i18n';
 import './cluster.scss';
-import Welcome from './welcome';
 
 const fields = [
 	{

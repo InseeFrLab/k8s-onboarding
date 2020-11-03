@@ -1,6 +1,6 @@
 import D from 'i18n';
 import React from 'react';
-import { Button, Divider, Typography, Grid, Box } from '@material-ui/core/';
+import { Divider, Typography, Grid, Box } from '@material-ui/core/';
 import AppBar from '../appbar';
 import './header.scss';
 
