@@ -5,13 +5,25 @@ import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import { Loader } from 'components/commons';
+import Box from '@material-ui/core/Box';
+import { Loader, CopyableField, ExportCredentials } from 'components/commons';
 import API from 'api';
+import { exportTypes } from 'utils';
 import D from 'i18n';
 import './cluster.scss';
 
+const fields = [
+	{
+		accessor: 'apiserverUrl',
+		label: 'API server URL',
+	},
+	{ accessor: 'namespace', label: 'Namespace' },
+	{ accessor: 'token', label: 'Token' },
+	{ accessor: 'user', label: 'User' },
+];
+
 const Cluster = () => {
-	const [cluster, setCluster] = useState({});
+	const [cluster, setCluster] = useState<any>({});
 	const [loading, setLoading] = useState(true);
 	const {
 		keycloak: { token, tokenParsed },
@@ -33,23 +45,49 @@ const Cluster = () => {
 			<h2 className="name">{name}</h2>
 			<p className="email">{email}</p>
 			<Divider />
-			<Grid container className="cards">
-				<Grid item lg={8} md={8} xs={12}>
-					<Card classes={{ root: 'container' }}>
-						<CardHeader title={D.cardIdTitle} />
+			<Box m={4} />
+			<Grid container className="cards" spacing={2}>
+				<Grid item lg={1} />
+				<Grid item lg={6} md={8} xs={12}>
+					<Card className="card" elevation={16}>
+						<CardHeader title={D.cardIdTitle} className="card-title" />
+						<Divider />
 						<CardContent>
-							{Object.entries(cluster).map((c: any) => (
-								<p key={c[0]}>{`${c[0]} : ${c[1]}`}</p>
+							{fields.map(({ accessor, label }: any, i) => (
+								<CopyableField
+									key={accessor}
+									row={i}
+									label={label}
+									value={cluster[accessor]}
+									copy
+								/>
 							))}
+							<div className="row row-major">
+								<ExportCredentials
+									text={D.exportKubLabel}
+									exportTypes={exportTypes}
+									credentials={cluster}
+								/>
+							</div>
 						</CardContent>
 					</Card>
 				</Grid>
 				<Grid item lg={4} md={4} xs={12}>
-					<Card classes={{ root: 'container' }}>
-						<CardHeader title={D.cardDocTitle} />
-						<CardContent>...</CardContent>
+					<Card className="card" elevation={16}>
+						<CardHeader title={D.cardDocTitle} className="card-title" />
+						<Divider />
+						<CardContent>
+							<p>{D.docDescription}</p>
+							<a
+								href="https://git.stable.innovation.insee.eu"
+								className="git-link"
+							>
+								git.stable.innovation.insee.eu
+							</a>
+						</CardContent>
 					</Card>
 				</Grid>
+				<Grid item lg={1} />
 			</Grid>
 		</>
 	);

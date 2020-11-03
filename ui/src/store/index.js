@@ -1,1 +1,0 @@
-export { confState } from './conf';

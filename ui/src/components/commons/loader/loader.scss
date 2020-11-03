@@ -1,0 +1,14 @@
+@import 'index.scss';
+
+.loader-img {
+	display: flex;
+	position: relative;
+	align-items: center;
+	justify-content: center;
+	text-align: center;
+}
+
+.loader-txt {
+	text-align: center;
+	color: $main-color;
+}

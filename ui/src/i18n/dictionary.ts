@@ -11,4 +11,17 @@ export const dictionary = {
 	logout: { fr: 'Se déconnecter', en: 'Logout' },
 	cardIdTitle: { fr: 'Identifiants', en: 'Identifiers' },
 	cardDocTitle: { fr: 'Documentation', en: 'Documentation' },
+	docDescription: {
+		fr: 'Consulter la documentation et les liens utiles à votre déploiement',
+		en: 'See documentation and usefull links for your deployment',
+	},
+	btnCopyLabel: {
+		fr: 'copier dans le presse papier',
+		en: 'copy into clipboard',
+	},
+	btnSaveAsLabel: { fr: 'Enregistrer', en: 'Save' },
+	exportKubLabel: {
+		fr: 'Accéder à kubernetes en dehors du datalab',
+		en: 'Access kubernetes outside the datalab',
+	},
 };
