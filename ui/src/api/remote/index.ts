@@ -12,8 +12,17 @@ const request = (url: string) => (token: string) => (method: string) => {
 	} as any).then((r) => r.json());
 };
 
+const requestNoData = (url: string) => (token: string) => (method: string) => {
+	const headers = { Accept: 'application/json' };
+	return fetch(buildUrl(url), {
+		headers: token ? { ...headers, Authorization: `Bearer ${token}` } : headers,
+		method: method,
+	} as any);
+};
+
 // TODO : add body content
-const post = (url: string) => (token: string) => request(url)(token)('POST');
+const post = (url: string) => (token: string) =>
+	requestNoData(url)(token)('POST');
 const get = (url: string) => (token: string) => request(url)(token)('GET');
 const api: API = {
 	conf: get(`api/public/configuration`),
