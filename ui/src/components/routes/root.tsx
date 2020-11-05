@@ -9,6 +9,7 @@ import {
 } from 'react-router-dom';
 import PrivateRoute from './private-route';
 import Cluster from 'components/cluster';
+import Welcome from 'components/cluster/welcome';
 import { Header, Loader } from 'components/commons';
 import Theme from './../material-ui-theme';
 
@@ -24,6 +25,7 @@ const Root = () => {
 			<Router>
 				<Header />
 				<Switch>
+					<PrivateRoute exact path="/welcome" component={Welcome} />
 					<PrivateRoute exact path="/cluster" component={Cluster} />
 					<Route exact path="/" component={() => <div />} />
 					<Redirect to="/" />

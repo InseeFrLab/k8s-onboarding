@@ -15,16 +15,16 @@ import './cluster.scss';
 const fields = [
 	{
 		accessor: 'apiserverUrl',
-		label: 'API server URL',
+		label: 'API server URL (--server x)',
 	},
-	{ accessor: 'namespace', label: 'Namespace' },
-	{ accessor: 'token', label: 'Token' },
-	{ accessor: 'user', label: 'User' },
+	{ accessor: 'namespace', label: 'Namespace (--namespace x)' },
+	{ accessor: 'token', label: 'Token (--token x)' },
 ];
 
 const Cluster = () => {
 	const [cluster, setCluster] = useState<any>({});
 	const [loading, setLoading] = useState(true);
+
 	const {
 		keycloak: { token, tokenParsed },
 	} = useKeycloak();
@@ -42,7 +42,7 @@ const Cluster = () => {
 
 	return (
 		<>
-			<h2 className="name">{name}</h2>
+			<h2 className="name">{`${name} (${cluster['user']})`}</h2>
 			<p className="email">{email}</p>
 			<Divider />
 			<Box m={4} />
@@ -52,6 +52,7 @@ const Cluster = () => {
 					<Card className="card" elevation={16}>
 						<CardHeader title={D.cardIdTitle} className="card-title" />
 						<Divider />
+
 						<CardContent>
 							{fields.map(({ accessor, label }: any, i) => (
 								<CopyableField
@@ -62,6 +63,8 @@ const Cluster = () => {
 									copy
 								/>
 							))}
+
+							<Divider />
 							<div className="row row-major">
 								<ExportCredentials
 									text={D.exportKubLabel}
@@ -79,10 +82,10 @@ const Cluster = () => {
 						<CardContent>
 							<p>{D.docDescription}</p>
 							<a
-								href="https://git.stable.innovation.insee.eu"
+								href="https://kubernetes.io/fr/docs/home/"
 								className="git-link"
 							>
-								git.stable.innovation.insee.eu
+								https://kubernetes.io/fr/docs/home/
 							</a>
 						</CardContent>
 					</Card>

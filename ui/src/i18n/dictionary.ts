@@ -21,7 +21,7 @@ export const dictionary = {
 	},
 	btnSaveAsLabel: { fr: 'Enregistrer', en: 'Save' },
 	exportKubLabel: {
-		fr: 'Accéder à kubernetes en dehors du datalab',
-		en: 'Access kubernetes outside the datalab',
+		fr: 'Configuration automatique (script)',
+		en: 'Automatic configuration (script)',
 	},
 };

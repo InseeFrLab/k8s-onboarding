@@ -15,6 +15,8 @@ const api: API = {
 		token: 'my_token',
 		user: 'user',
 	}),
+	createNamespace: get({}),
+	setPermissionsToNamespace: get({}),
 };
 
 export default api;

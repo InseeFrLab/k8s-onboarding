@@ -5,13 +5,13 @@ import org.springframework.context.annotation.Configuration;
 
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import org.springframework.stereotype.Service;
 
-@Configuration
-public class KubernetesClientConfiguration {
+@Service
+public class KubernetesClientProvider {
 
-    @Bean
-    public KubernetesClient kubernetesClient() {
-	return new DefaultKubernetesClient();
+    public KubernetesClient getKubernetesClient() {
+        return new DefaultKubernetesClient();
     }
 
 }

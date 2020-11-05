@@ -4,7 +4,10 @@ public class ClusterCredentials {
     private String apiserverUrl;
     private String token = null;
     private String namespace;
+    private boolean onboarded;
     private String user;
+    private String clusterName;
+
 
     public String getToken() {
 	return token;
@@ -38,4 +41,19 @@ public class ClusterCredentials {
 	this.user = user;
     }
 
+    public boolean isOnboarded() {
+        return onboarded;
+    }
+
+    public void setOnboarded(boolean onboarded) {
+        this.onboarded = onboarded;
+    }
+
+    public String getClusterName() {
+        return clusterName;
+    }
+
+    public void setClusterName(String clusterName) {
+        this.clusterName = clusterName;
+    }
 }

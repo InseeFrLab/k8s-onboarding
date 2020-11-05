@@ -12,6 +12,7 @@ public class ClusterProperties {
   private String userPrefix;
   private String nameNamespaceAdmin;
   private String apiserverUrl;
+  private String clusterName;
   
   public void setNamespacePrefix(String namespacePrefix) {
     this.namespacePrefix = namespacePrefix;
@@ -42,6 +43,12 @@ public class ClusterProperties {
   public void setUserPrefix(String userPrefix) {
     this.userPrefix = userPrefix;
   }
-  
-  
+
+  public String getClusterName() {
+    return clusterName;
+  }
+
+  public void setClusterName(String clusterName) {
+    this.clusterName = clusterName;
+  }
 }
