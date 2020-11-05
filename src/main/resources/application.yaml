@@ -2,6 +2,7 @@ spring.security.oauth2.resourceserver.jwt.issuer-uri:
 springdoc.swagger-ui.path: "/api"
 
 io.insee.dev.k8sonboarding:
+  clusterName: "default-cluster"
   apiserver-url: "https://example.com"
   namespace-prefix: "dev-"
   user-prefix:

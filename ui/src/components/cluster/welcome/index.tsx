@@ -43,23 +43,24 @@ function getButtonMessage() {
 	];
 }
 
-function getStepContent(stepIndex: number, cluster: any) {
+function getStepContent(stepIndex: number, cluster: Credentials) {
 	switch (stepIndex) {
 		case 0:
-			return `Bienvenue sur la plateforme Kubernetes ${cluster.apiserverUrl} !  
+			return `Bienvenue sur la plateforme Kubernetes ${cluster.clusterName} !  
 Cette plateforme est soumise aux conditions d'utilisations suivantes :  
 * Aucune garantie de service que ce soit en confidentialité, intégrité ou disponibilité  
-* dsqdsd  `;
+* Limité aux applications opensource  
+* Limité aux données de test anonymisées  `;
 		case 1:
 			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc se créer un espace personnel.  
-Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}'.  
+Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}.  
 			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${cluster.namespace}`;
 		case 2:
-			return 'This is the bit I really care about!';
+			return `Maintenant que le namespace a été créé, il nous faut attributer les droits à ${cluster.user}.`;
 		case 3:
 			return "C'est prêt :)";
 		default:
-			return 'Unknown stepIndex';
+			return '?';
 	}
 }
 
@@ -78,9 +79,6 @@ export default function Welcome() {
 			if (c.onboarded) {
 				push('/cluster');
 			} else {
-				if (c.namespace) {
-					setActiveStep(2);
-				}
 				setCredentials(c);
 			}
 		});

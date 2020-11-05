@@ -4,4 +4,5 @@ export default interface Credentials {
 	token: string;
 	user: string;
 	onboarded: boolean;
+	clusterName: string;
 }

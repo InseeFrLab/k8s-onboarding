@@ -82,10 +82,10 @@ const Cluster = () => {
 						<CardContent>
 							<p>{D.docDescription}</p>
 							<a
-								href="https://git.stable.innovation.insee.eu"
+								href="https://kubernetes.io/fr/docs/home/"
 								className="git-link"
 							>
-								git.stable.innovation.insee.eu
+								https://kubernetes.io/fr/docs/home/
 							</a>
 						</CardContent>
 					</Card>
