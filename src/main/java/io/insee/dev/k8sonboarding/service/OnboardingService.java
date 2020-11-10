@@ -24,7 +24,7 @@ public class OnboardingService {
 
     private static final Logger logger = LoggerFactory.getLogger(ClusterAccessController.class);
 
-    public static final String CLUSTER_ADMIN = "cluster-admin";
+    public static final String ADMIN = "admin";
     public static final String API_GROUP = "rbac.authorization.k8s.io";
     public static final String USER = "User";
     public static final String LABEL_CREATED_BY = "created_by";
@@ -79,7 +79,7 @@ public class OnboardingService {
 		    .withNamespace(namespaceId).endMetadata()
 		    .withSubjects(new SubjectBuilder().withKind(USER).withName(userId).withApiGroup(API_GROUP)
 			    .withNamespace(namespaceId).build())
-		    .withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(CLUSTER_ADMIN)
+		    .withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(ADMIN)
 		    .endRoleRef();
 	    bindingToCreate.done();
 	}
