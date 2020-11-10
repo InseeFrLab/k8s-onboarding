@@ -75,7 +75,7 @@ public class OnboardingServiceTests {
 	Assert.assertEquals(roleBindingList.getItems().get(0).getSubjects().get(0).getName(), user.getId());
 	Assert.assertEquals(roleBindingList.getItems().get(0).getSubjects().get(0).getNamespace(),
 		"namespaceprefix-userprefix-id");
-	Assert.assertEquals(roleBindingList.getItems().get(0).getRoleRef().getName(), OnboardingService.CLUSTER_ADMIN);
+	Assert.assertEquals(roleBindingList.getItems().get(0).getRoleRef().getName(), OnboardingService.ADMIN);
 	Assert.assertEquals(roleBindingList.getItems().get(0).getRoleRef().getApiGroup(), OnboardingService.API_GROUP);
 	Assert.assertEquals(roleBindingList.getItems().get(0).getRoleRef().getKind(), OnboardingService.CLUSTER_ROLE);
 
