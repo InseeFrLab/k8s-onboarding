@@ -18,7 +18,7 @@ const AppBarBtn = () => {
 			push('/');
 			logout();
 		} else {
-			push('/welcome');
+			push('/cluster');
 		}
 	};
 	const label: string = authenticated ? D.logout : D.login;
