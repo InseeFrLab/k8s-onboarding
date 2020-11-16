@@ -24,11 +24,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function getSteps() {
+function getSteps(isGroup: boolean) {
 	return [
 		'Bienvenue !',
-		'Créer mon espace de travail (namespace)',
-		'Attribuer les droits à mon utilisateur',
+		isGroup
+			? "Créer l'espace de travail du groupe (namespace)"
+			: 'Créer mon espace de travail (namespace)',
+		isGroup
+			? 'Attribuer les droits au groupe'
+			: 'Attribuer les droits à mon utilisateur',
 		"C'est prêt !",
 	];
 }
@@ -36,9 +40,9 @@ function getSteps() {
 function getButtonMessage() {
 	return [
 		"C'est compris, allons y !",
-		'Créer mon espace de travail (namespace)',
-		'Attribuer les droits à mon utilisateur',
-		'Commencer à déployer des applications',
+		"Créer l'espace de travail",
+		'Attribuer les droits',
+		'Commencer à y déployer des applications',
 	];
 }
 
@@ -74,7 +78,7 @@ export default function Welcome({
 }) {
 	const classes = useStyles();
 	const [activeStep, setActiveStep] = React.useState(0);
-	const steps = getSteps();
+	const steps = getSteps(Boolean(group));
 	const {
 		keycloak: { token },
 	} = useKeycloak();
