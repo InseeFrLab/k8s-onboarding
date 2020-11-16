@@ -138,7 +138,7 @@ const Cluster = () => {
 				scrollButtons="auto"
 				aria-label="scrollable auto tabs example"
 			>
-				<Tab label="User" value={0} />
+				<Tab label={preferred_username} value={0} />
 				{groups &&
 					groups.map((group: string, index: number) => (
 						<Tab label={group} value={index + 1} />

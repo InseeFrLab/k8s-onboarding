@@ -46,7 +46,12 @@ function getButtonMessage() {
 	];
 }
 
-function getStepContent(stepIndex: number, cluster: Credentials) {
+function getStepContent(
+	stepIndex: number,
+	cluster: Credentials,
+	group?: string
+) {
+	const isGroup = Boolean(group);
 	switch (stepIndex) {
 		case 0:
 			return `Bienvenue sur la plateforme Kubernetes ${cluster.clusterName} !  
@@ -55,11 +60,19 @@ Cette plateforme est soumise aux conditions d'utilisations suivantes :
 * Limité aux applications opensource  
 * Limité aux données de test anonymisées  `;
 		case 1:
-			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc se créer un espace personnel.  
-Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}.  
-			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${cluster.namespace}`;
+			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc ${
+				isGroup
+					? ' créer un espace réservé pour le groupe ' + group
+					: 'se créer un espace personnel'
+			}.  
+Pour simplifier, on va attribuer le namespace ${cluster.namespace}.  
+			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${
+				cluster.namespace
+			}`;
 		case 2:
-			return `Maintenant que le namespace a été créé, il nous faut attributer les droits à ${cluster.user}.`;
+			return `Maintenant que le namespace a été créé, il nous faut attributer les droits ${
+				isGroup ? 'au groupe ' + group : "à l'utilisateur " + cluster.user
+			}`;
 		case 3:
 			return "C'est prêt :)";
 		default:
@@ -132,7 +145,7 @@ export default function Welcome({
 					<div>
 						<Typography className={classes.instructions}>
 							<ReactMarkdown>
-								{getStepContent(activeStep, credentials)}
+								{getStepContent(activeStep, credentials, group)}
 							</ReactMarkdown>
 						</Typography>
 						<div>
