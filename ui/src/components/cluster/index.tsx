@@ -35,36 +35,36 @@ function TabPanel(props: any) {
 	);
 }
 
-const Content = ({
-	token,
-	namespace,
-}: {
-	token: string | undefined;
-	namespace: string;
-}) => {
+const Content = ({ token, group }: { token?: string; group?: string }) => {
 	const [cluster, setCluster] = useState<Credentials>();
 	const [loading, setLoading] = useState(true);
 
-	useEffect(() => {
-		API.cluster(token).then((c) => {
+	const getCredentials = (token?: string, group?: string) => {
+		API.cluster(token, group).then((c) => {
 			setCluster(c);
 			setLoading(false);
 		});
-	}, [token]);
+	};
+
+	useEffect(() => getCredentials(token, group), [token, group]);
 
 	if (loading) return <Loader />;
 
-	if (!cluster?.onboarded) return <Welcome />;
+	if (!cluster?.onboarded)
+		return (
+			<Welcome
+				group={group}
+				credentials={cluster}
+				onFinish={() => getCredentials(token, group)}
+			/>
+		);
 
 	return (
 		<Grid container className="cards" spacing={2}>
 			<Grid item lg={1} />
 			<Grid item lg={6} md={8} xs={12}>
 				<Card className="card" elevation={16}>
-					<CardHeader
-						title={D.cardIdTitle + namespace}
-						className="card-title"
-					/>
+					<CardHeader title={D.cardIdTitle} className="card-title" />
 					<Divider />
 
 					<CardContent>
@@ -146,12 +146,12 @@ const Cluster = () => {
 			</Tabs>
 			<Box m={4} />
 			<TabPanel value={activePanel} index={0}>
-				<Content token={token} namespace={'User'} />
+				<Content token={token} />
 			</TabPanel>
 			{groups &&
 				groups.map((group: string, index: number) => (
 					<TabPanel value={activePanel} index={index + 1}>
-						<Content token={token} namespace={group} />
+						<Content token={token} group={group} />
 					</TabPanel>
 				))}
 		</>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Loader } from 'components/commons';
 import ReactMarkdown from 'react-markdown';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +7,6 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useHistory } from 'react-router-dom';
 import API from 'api';
 import { useKeycloak } from '@react-keycloak/web';
 import Credentials from 'model/Credentials';
@@ -64,35 +63,33 @@ Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}.
 	}
 }
 
-export default function Welcome() {
+export default function Welcome({
+	group,
+	credentials,
+	onFinish,
+}: {
+	group?: string;
+	credentials?: Credentials;
+	onFinish?: () => void;
+}) {
 	const classes = useStyles();
 	const [activeStep, setActiveStep] = React.useState(0);
-	const [credentials, setCredentials] = useState<Credentials>();
 	const steps = getSteps();
-	const { push } = useHistory();
 	const {
 		keycloak: { token },
 	} = useKeycloak();
 
-	React.useEffect(() => {
-		API.cluster(token).then((c) => {
-			if (c.onboarded) {
-				push('/cluster');
-			} else {
-				setCredentials(c);
-			}
-		});
-	}, [token, push]);
-
 	const handleNext = () => {
 		if (activeStep >= steps.length - 1) {
-			push('/cluster');
+			if (onFinish) {
+				onFinish();
+			}
 		} else if (activeStep === 1) {
-			API.createNamespace(token, credentials?.namespace).then((c) => {
+			API.createNamespace(token, group).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else if (activeStep === 2) {
-			API.setPermissionsToNamespace(token, credentials?.namespace).then((c) => {
+			API.setPermissionsToNamespace(token, group).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else {

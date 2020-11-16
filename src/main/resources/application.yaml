@@ -5,7 +5,9 @@ io.insee.dev.k8sonboarding:
   clusterName: "default-cluster"
   apiserver-url: "https://example.com"
   namespace-prefix: "dev-"
+  namespace-group-prefix: "gr-"
   user-prefix:
+  group-prefix:
   name-namespace-admin: "namespace_admin"
   jwt:
     username-claim: "preferred_username"

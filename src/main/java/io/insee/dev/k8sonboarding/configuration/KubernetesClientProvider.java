@@ -14,4 +14,9 @@ public class KubernetesClientProvider {
         return new DefaultKubernetesClient();
     }
 
+    @Bean
+    public KubernetesClient kubernetesClient() {
+        return new DefaultKubernetesClient();
+    }
+
 }
