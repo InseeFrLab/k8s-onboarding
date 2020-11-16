@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Loader } from 'components/commons';
 import ReactMarkdown from 'react-markdown';
 import { makeStyles } from '@material-ui/core/styles';
@@ -7,7 +7,6 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { useHistory } from 'react-router-dom';
 import API from 'api';
 import { useKeycloak } from '@react-keycloak/web';
 import Credentials from 'model/Credentials';
@@ -25,11 +24,15 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function getSteps() {
+function getSteps(isGroup: boolean) {
 	return [
 		'Bienvenue !',
-		'Créer mon espace de travail (namespace)',
-		'Attribuer les droits à mon utilisateur',
+		isGroup
+			? "Créer l'espace de travail du groupe (namespace)"
+			: 'Créer mon espace de travail (namespace)',
+		isGroup
+			? 'Attribuer les droits au groupe'
+			: 'Attribuer les droits à mon utilisateur',
 		"C'est prêt !",
 	];
 }
@@ -37,13 +40,18 @@ function getSteps() {
 function getButtonMessage() {
 	return [
 		"C'est compris, allons y !",
-		'Créer mon espace de travail (namespace)',
-		'Attribuer les droits à mon utilisateur',
-		'Commencer à déployer des applications',
+		"Créer l'espace de travail",
+		'Attribuer les droits',
+		'Commencer à y déployer des applications',
 	];
 }
 
-function getStepContent(stepIndex: number, cluster: Credentials) {
+function getStepContent(
+	stepIndex: number,
+	cluster: Credentials,
+	group?: string
+) {
+	const isGroup = Boolean(group);
 	switch (stepIndex) {
 		case 0:
 			return `Bienvenue sur la plateforme Kubernetes ${cluster.clusterName} !  
@@ -52,11 +60,19 @@ Cette plateforme est soumise aux conditions d'utilisations suivantes :
 * Limité aux applications opensource  
 * Limité aux données de test anonymisées  `;
 		case 1:
-			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc se créer un espace personnel.  
-Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}.  
-			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${cluster.namespace}`;
+			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc ${
+				isGroup
+					? ' créer un espace réservé pour le groupe ' + group
+					: 'se créer un espace personnel'
+			}.  
+Pour simplifier, on va attribuer le namespace ${cluster.namespace}.  
+			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${
+				cluster.namespace
+			}`;
 		case 2:
-			return `Maintenant que le namespace a été créé, il nous faut attributer les droits à ${cluster.user}.`;
+			return `Maintenant que le namespace a été créé, il nous faut attributer les droits ${
+				isGroup ? 'au groupe ' + group : "à l'utilisateur " + cluster.user
+			}`;
 		case 3:
 			return "C'est prêt :)";
 		default:
@@ -64,35 +80,33 @@ Pour simplifier, on va s'attribuer le namespace ${cluster.namespace}.
 	}
 }
 
-export default function Welcome() {
+export default function Welcome({
+	group,
+	credentials,
+	onFinish,
+}: {
+	group?: string;
+	credentials?: Credentials;
+	onFinish?: () => void;
+}) {
 	const classes = useStyles();
 	const [activeStep, setActiveStep] = React.useState(0);
-	const [credentials, setCredentials] = useState<Credentials>();
-	const steps = getSteps();
-	const { push } = useHistory();
+	const steps = getSteps(Boolean(group));
 	const {
 		keycloak: { token },
 	} = useKeycloak();
 
-	React.useEffect(() => {
-		API.cluster(token).then((c) => {
-			if (c.onboarded) {
-				push('/cluster');
-			} else {
-				setCredentials(c);
-			}
-		});
-	}, [token, push]);
-
 	const handleNext = () => {
 		if (activeStep >= steps.length - 1) {
-			push('/cluster');
+			if (onFinish) {
+				onFinish();
+			}
 		} else if (activeStep === 1) {
-			API.createNamespace(token, credentials?.namespace).then((c) => {
+			API.createNamespace(token, group).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else if (activeStep === 2) {
-			API.setPermissionsToNamespace(token, credentials?.namespace).then((c) => {
+			API.setPermissionsToNamespace(token, group).then((c) => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else {
@@ -131,7 +145,7 @@ export default function Welcome() {
 					<div>
 						<Typography className={classes.instructions}>
 							<ReactMarkdown>
-								{getStepContent(activeStep, credentials)}
+								{getStepContent(activeStep, credentials, group)}
 							</ReactMarkdown>
 						</Typography>
 						<div>

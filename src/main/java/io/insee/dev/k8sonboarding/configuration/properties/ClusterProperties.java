@@ -3,17 +3,21 @@ package io.insee.dev.k8sonboarding.configuration.properties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
+import javax.annotation.PostConstruct;
+
 
 @Configuration
 @ConfigurationProperties(prefix="io.insee.dev.k8sonboarding")
 public class ClusterProperties {
   
   private String namespacePrefix;
+  private String namespaceGroupPrefix;
   private String userPrefix;
+  private String groupPrefix;
   private String nameNamespaceAdmin;
   private String apiserverUrl;
   private String clusterName;
-  
+
   public void setNamespacePrefix(String namespacePrefix) {
     this.namespacePrefix = namespacePrefix;
   }
@@ -50,5 +54,21 @@ public class ClusterProperties {
 
   public void setClusterName(String clusterName) {
     this.clusterName = clusterName;
+  }
+
+  public String getGroupPrefix() {
+    return groupPrefix;
+  }
+
+  public void setGroupPrefix(String groupPrefix) {
+    this.groupPrefix = groupPrefix;
+  }
+
+  public void setNamespaceGroupPrefix(String namespaceGroupPrefix) {
+    this.namespaceGroupPrefix = namespaceGroupPrefix;
+  }
+
+  public String getNamespaceGroupPrefix() {
+    return namespaceGroupPrefix;
   }
 }

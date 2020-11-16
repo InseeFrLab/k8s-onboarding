@@ -29,19 +29,37 @@ public class ClusterAccessController {
     @Value("${io.insee.dev.k8sonboarding.jwt.username-claim}")
     private String usernameClaim;
 
+    @Value("${io.insee.dev.k8sonboarding.jwt.groups-claim:groups}")
+    private String groupsClaim;
+
     @GetMapping
-    public ClusterCredentials getCredentials(Authentication auth) {
-	return onboardingService.getClusterCredentials(userProvider.getUser(auth));
+    public ClusterCredentials getCredentials(Authentication auth) throws IllegalAccessException {
+        return getCredentials(auth, null);
     }
 
-    @PostMapping("/namespace/{namespaceId}")
-    public void createNamespace(Authentication auth, @PathVariable String namespaceId) {
-	onboardingService.createNamespace(userProvider.getUser(auth), namespaceId);
+    @GetMapping("/credentials/{groupId}")
+    public ClusterCredentials getCredentials(Authentication auth, @PathVariable String groupId) throws IllegalAccessException {
+	return onboardingService.getClusterCredentials(userProvider.getUser(auth), groupId);
     }
 
-    @PostMapping("/namespace/{namespaceId}/permissions")
-    public void addPermissionsToNamespace(Authentication auth, @PathVariable String namespaceId) {
-	onboardingService.addPermissionsToNamespace(userProvider.getUser(auth), namespaceId);
+    @PostMapping("/namespace")
+    public void createNamespaceForUser(Authentication auth) {
+        onboardingService.createNamespace(userProvider.getUser(auth), null);
+    }
+
+    @PostMapping("/namespace/{groupId}")
+    public void createNamespaceForGroup(Authentication auth, @PathVariable String groupId) {
+	onboardingService.createNamespace(userProvider.getUser(auth), groupId);
+    }
+
+    @PostMapping("/permissions")
+    public void addPermissionsForUser(Authentication auth) {
+	onboardingService.addPermissionsToNamespace(userProvider.getUser(auth), null);
+    }
+
+    @PostMapping("/permissions/{groupId}")
+    public void addPermissionsForUser(Authentication auth, @PathVariable String groupId) {
+        onboardingService.addPermissionsToNamespace(userProvider.getUser(auth), groupId);
     }
 
     @Bean
@@ -50,6 +68,7 @@ public class ClusterAccessController {
 	    final User user = new User();
 	    final Jwt jwt = (Jwt) auth.getPrincipal();
 	    user.setId(jwt.getClaimAsString(usernameClaim));
+	    user.setGroups(jwt.getClaimAsStringList(groupsClaim));
 	    user.setAuthToken(jwt.getTokenValue());
 	    return user;
 	};
