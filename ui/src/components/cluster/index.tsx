@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useKeycloak } from '@react-keycloak/web';
+import { useReactOidc } from '@axa-fr/react-oidc-context';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -119,8 +119,8 @@ const Cluster = () => {
 	const [activePanel, setActivePanel] = useState(0);
 
 	const {
-		keycloak: { token, tokenParsed },
-	} = useKeycloak();
+		oidcUser: { access_token: token, profile: tokenParsed },
+	} = useReactOidc();
 
 	const { name, preferred_username, email, groups } = tokenParsed as any;
 
