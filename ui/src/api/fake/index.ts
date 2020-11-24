@@ -13,6 +13,8 @@ const api: API = {
 		namespace: 'my_namespace',
 		token: 'my_token',
 		user: 'user',
+		onboarded: false,
+		clusterName: 'clusterName',
 	}),
 	createNamespace: get({}),
 	setPermissionsToNamespace: get({}),
