@@ -142,11 +142,9 @@ export default function Welcome({
 					</div>
 				) : (
 					<div>
-						<Typography className={classes.instructions}>
-							<ReactMarkdown>
-								{getStepContent(activeStep, credentials, group)}
-							</ReactMarkdown>
-						</Typography>
+						<ReactMarkdown>
+							{getStepContent(activeStep, credentials, group)}
+						</ReactMarkdown>
 						<div>
 							{activeStep !== 0 ? (
 								<Button
