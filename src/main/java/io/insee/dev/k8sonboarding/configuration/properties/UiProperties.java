@@ -8,8 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class UiProperties {
 
     private String clientId;
-    private String keycloakUrl;
-    private String keycloakRealm;
+    private String authority;
 
     public UiProperties() {
 	super();
@@ -23,20 +22,12 @@ public class UiProperties {
 	this.clientId = clientId;
     }
 
-    public String getKeycloakUrl() {
-        return keycloakUrl;
+    public String getAuthority() {
+        return authority;
     }
 
-    public void setKeycloakUrl(String keycloakUrl) {
-        this.keycloakUrl = keycloakUrl;
-    }
-
-    public String getKeycloakRealm() {
-        return keycloakRealm;
-    }
-
-    public void setKeycloakRealm(String keycloakRealm) {
-        this.keycloakRealm = keycloakRealm;
+    public void setAuthority(String authority) {
+        this.authority = authority;
     }
 
 }
