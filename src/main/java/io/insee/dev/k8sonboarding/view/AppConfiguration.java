@@ -2,7 +2,6 @@ package io.insee.dev.k8sonboarding.view;
 
 public class AppConfiguration {
     private String authUrl;
-    private String realm;
     private String resource;
     private String clientId;
     private String authority;
@@ -17,14 +16,6 @@ public class AppConfiguration {
 
     public void setAuthUrl(String authUrl) {
 	this.authUrl = authUrl;
-    }
-
-    public String getRealm() {
-	return realm;
-    }
-
-    public void setRealm(String realm) {
-	this.realm = realm;
     }
 
     public String getResource() {

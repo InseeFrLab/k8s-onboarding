@@ -22,8 +22,6 @@ public class ConfigurationController {
     @GetMapping
     public AppConfiguration getConfiguration() {
         final AppConfiguration appConfiguration = new AppConfiguration();
-        appConfiguration.setAuthUrl(uiProperties.getKeycloakUrl());
-        appConfiguration.setRealm(uiProperties.getKeycloakRealm());
         appConfiguration.setResource(uiProperties.getClientId());
         appConfiguration.setAuthority(uiProperties.getAuthority());
         appConfiguration.setClientId(uiProperties.getClientId());
