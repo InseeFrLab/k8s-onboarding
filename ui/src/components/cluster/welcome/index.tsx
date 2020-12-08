@@ -8,7 +8,6 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import API from 'api';
-import { useKeycloak } from '@react-keycloak/web';
 import Credentials from 'model/Credentials';
 
 const useStyles = makeStyles((theme) => ({
@@ -92,9 +91,9 @@ export default function Welcome({
 	const classes = useStyles();
 	const [activeStep, setActiveStep] = React.useState(0);
 	const steps = getSteps(Boolean(group));
-	const {
-		keycloak: { token },
-	} = useKeycloak();
+
+	// TODO
+	const token = '';
 
 	const handleNext = () => {
 		if (activeStep >= steps.length - 1) {
@@ -102,11 +101,11 @@ export default function Welcome({
 				onFinish();
 			}
 		} else if (activeStep === 1) {
-			API.createNamespace(token, group).then((c) => {
+			API.createNamespace(token, group).then(() => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else if (activeStep === 2) {
-			API.setPermissionsToNamespace(token, group).then((c) => {
+			API.setPermissionsToNamespace(token, group).then(() => {
 				setActiveStep((prevActiveStep) => prevActiveStep + 1);
 			});
 		} else {
@@ -143,11 +142,9 @@ export default function Welcome({
 					</div>
 				) : (
 					<div>
-						<Typography className={classes.instructions}>
-							<ReactMarkdown>
-								{getStepContent(activeStep, credentials, group)}
-							</ReactMarkdown>
-						</Typography>
+						<ReactMarkdown>
+							{getStepContent(activeStep, credentials, group)}
+						</ReactMarkdown>
 						<div>
 							{activeStep !== 0 ? (
 								<Button

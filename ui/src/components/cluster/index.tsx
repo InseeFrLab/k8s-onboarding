@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useKeycloak } from '@react-keycloak/web';
+import { useReactOidc } from '@axa-fr/react-oidc-context';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
@@ -11,7 +11,7 @@ import API from 'api';
 import { exportTypes } from 'utils';
 import D from 'i18n';
 import './cluster.scss';
-import { Tabs, Tab, Typography } from '@material-ui/core';
+import { Tabs, Tab } from '@material-ui/core';
 import Welcome from './welcome';
 import Credentials from 'model/Credentials';
 
@@ -27,9 +27,10 @@ function TabPanel(props: any) {
 			{...other}
 		>
 			{value === index && (
-				<Box p={3}>
-					<Typography>{children}</Typography>
-				</Box>
+				<>
+					<Box p={3} />
+					{children}
+				</>
 			)}
 		</div>
 	);
@@ -46,7 +47,9 @@ const Content = ({ token, group }: { token?: string; group?: string }) => {
 		});
 	};
 
-	useEffect(() => getCredentials(token, group), [token, group]);
+	useEffect(() => {
+		getCredentials(token, group);
+	}, [token, group]);
 
 	if (loading) return <Loader />;
 
@@ -66,7 +69,6 @@ const Content = ({ token, group }: { token?: string; group?: string }) => {
 				<Card className="card" elevation={16}>
 					<CardHeader title={D.cardIdTitle} className="card-title" />
 					<Divider />
-
 					<CardContent>
 						{fields.map(({ accessor, label }: any, i) => (
 							<CopyableField
@@ -119,8 +121,8 @@ const Cluster = () => {
 	const [activePanel, setActivePanel] = useState(0);
 
 	const {
-		keycloak: { token, tokenParsed },
-	} = useKeycloak();
+		oidcUser: { access_token: token, profile: tokenParsed },
+	} = useReactOidc();
 
 	const { name, preferred_username, email, groups } = tokenParsed as any;
 

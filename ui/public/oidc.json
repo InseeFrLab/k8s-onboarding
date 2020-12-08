@@ -1,0 +1,15 @@
+{
+	"origin": "my_origin",
+	"isEnabled": true,
+	"config": {
+		"authority": "my_authority",
+		"client_id": "my_client_id",
+		"redirect_uri": "http://localhost:3000/authentication/callback",
+		"response_type": "code",
+		"post_logout_redirect_uri": "http://localhost:3000/",
+		"scope": "openid profile email",
+		"silent_redirect_uri": "http://localhost:3000/authentication/silent_callback",
+		"automaticSilentRenew": true,
+		"loadUserInfo": true
+	}
+}
