@@ -24,117 +24,112 @@ import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 @Service
 public class OnboardingService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ClusterAccessController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ClusterAccessController.class);
 
-    public static final String ADMIN = "admin";
-    public static final String API_GROUP = "rbac.authorization.k8s.io";
-    public static final String USER = "User";
+	public static final String ADMIN = "admin";
+	public static final String API_GROUP = "rbac.authorization.k8s.io";
+	public static final String USER = "User";
 	public static final String GROUP = "Group";
-    public static final String LABEL_CREATED_BY = "created_by";
-    public static final String CLUSTER_ROLE = "ClusterRole";
+	public static final String LABEL_CREATED_BY = "created_by";
+	public static final String CLUSTER_ROLE = "ClusterRole";
 
-    @Value("${spring.application.name:k8s-onboarding}")
-    private String appName;
+	@Value("${spring.application.name:k8s-onboarding}")
+	private String appName;
 
-    @Autowired
-    ClusterProperties clusterProperty;
+	@Autowired
+	ClusterProperties clusterProperty;
 
-    @Autowired
-    KubernetesClientProvider kubernetesClientProvider;
+	@Autowired
+	KubernetesClientProvider kubernetesClientProvider;
 
-    @Autowired
+	@Autowired
 	private KubernetesClient kubernetesClient;
 
-    public OnboardingService(ClusterProperties clusterProperty, KubernetesClientProvider kubernetesClientProvider) {
-	super();
-	this.clusterProperty = clusterProperty;
-	this.kubernetesClientProvider = kubernetesClientProvider;
-    }
-
-    /**
-     * Currently, namespaceid is ignored
-     *
-     * @param user
-     * @param groupId
-     */
-    public void createNamespace(User user, String groupId) {
-    	String namespaceId = getNamespaceId(user,groupId);
-	if (!checkNamespaceExists(namespaceId)) {
-	    logger.info("creating namespace {}", namespaceId);
-	    final DoneableNamespace namespaceToCreate = kubernetesClient.namespaces()
-		    .createNew().withNewMetadata().withName(namespaceId).addToLabels(LABEL_CREATED_BY, appName)
-		    .endMetadata();
-	    namespaceToCreate.done();
-		}
-    }
-
-    /**
-     * Currently, namespaceid is ignored
-     *
-     * @param user
-     * @param group
-     */
-    public void addPermissionsToNamespace(User user, String group) {
-	String namespaceId = getNamespaceId(user, group);
-	final String userId = getUserIdPrefixed(user.getId());
-	final String groupId = getGroupIdPrefixed(group);
-	if (checkNamespaceExists(namespaceId) && !checkPermissionsExists(namespaceId)) {
-	    logger.info("creating rolebinding for user {}", userId);
-	    DoneableRoleBinding bindingToCreate = kubernetesClient.rbac()
-		    .roleBindings().inNamespace(namespaceId).createNew().withNewMetadata()
-		    .withLabels(Map.of(LABEL_CREATED_BY, appName)).withName(clusterProperty.getNameNamespaceAdmin())
-		    .withNamespace(namespaceId).endMetadata()
-		    .withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(ADMIN)
-		    .endRoleRef();
-	    if (groupId == null) {
-			bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(USER).withName(userId).withApiGroup(API_GROUP)
-					.withNamespace(namespaceId).build());
-		}
-	    else {
-			bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(GROUP).withName(groupId).withApiGroup(API_GROUP)
-					.withNamespace(namespaceId).build());
-		}
-	    bindingToCreate.done();
+	public OnboardingService(ClusterProperties clusterProperty, KubernetesClientProvider kubernetesClientProvider) {
+		super();
+		this.clusterProperty = clusterProperty;
+		this.kubernetesClientProvider = kubernetesClientProvider;
 	}
-    }
 
-    public Boolean checkNamespaceExists(String namespaceId) {
-	final Namespace namespace = kubernetesClient.namespaces().withName(namespaceId)
-		.get();
-	return namespace != null;
-    }
-
-    public Boolean checkPermissionsExists(String namespaceId) {
-	final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings()
-		.inNamespace(namespaceId).withName(clusterProperty.getNameNamespaceAdmin()).get();
-	if (roleBinding != null && roleBinding.getSubjects().size() > 0) {
-	    return true;
+	/**
+	 * Currently, namespaceid is ignored
+	 *
+	 * @param user
+	 * @param groupId
+	 */
+	public void createNamespace(User user, String groupId) {
+		String namespaceId = getNamespaceId(user, groupId);
+		if (!checkNamespaceExists(namespaceId)) {
+			logger.info("creating namespace {}", namespaceId);
+			final DoneableNamespace namespaceToCreate = kubernetesClient.namespaces().createNew().withNewMetadata()
+					.withName(namespaceId).addToLabels(LABEL_CREATED_BY, appName).endMetadata();
+			namespaceToCreate.done();
+		}
 	}
-	return false;
-    }
 
-    public ClusterCredentials getClusterCredentials(User user, String group) {
-	final ClusterCredentials clusterCredentials = new ClusterCredentials();
-	final String namespaceId = getNamespaceId(user, group);
-	clusterCredentials.setApiserverUrl(clusterProperty.getApiserverUrl());
-	clusterCredentials.setNamespace(namespaceId);
-	clusterCredentials.setToken(user.getAuthToken());
-	clusterCredentials.setUser(getUserIdPrefixed(user.getId()));
-	clusterCredentials.setOnboarded(checkPermissionsExists(namespaceId));
-	clusterCredentials.setClusterName(clusterProperty.getClusterName());
-	return clusterCredentials;
-    }
+	/**
+	 * Currently, namespaceid is ignored
+	 *
+	 * @param user
+	 * @param group
+	 */
+	public void addPermissionsToNamespace(User user, String group) {
+		String namespaceId = getNamespaceId(user, group);
+		final String userId = getUserIdPrefixed(user.getId());
+		final String groupId = getGroupIdPrefixed(group);
+		if (checkNamespaceExists(namespaceId) && !checkPermissionsExists(namespaceId)) {
+			logger.info("creating rolebinding for user {}", userId);
+			DoneableRoleBinding bindingToCreate = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
+					.createNew().withNewMetadata().withLabels(Map.of(LABEL_CREATED_BY, appName))
+					.withName(clusterProperty.getNameNamespaceAdmin()).withNamespace(namespaceId).endMetadata()
+					.withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(ADMIN).endRoleRef();
+			if (group == null) {
+				bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(USER).withName(userId)
+						.withApiGroup(API_GROUP).withNamespace(namespaceId).build());
+			} else {
+				bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(GROUP).withName(groupId)
+						.withApiGroup(API_GROUP).withNamespace(namespaceId).build());
+			}
+			bindingToCreate.done();
+		}
+	}
 
-    private String getNamespaceId(User user, String group) {
-    	if (group == null) {
+	public Boolean checkNamespaceExists(String namespaceId) {
+		final Namespace namespace = kubernetesClient.namespaces().withName(namespaceId).get();
+		return namespace != null;
+	}
+
+	public Boolean checkPermissionsExists(String namespaceId) {
+		final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
+				.withName(clusterProperty.getNameNamespaceAdmin()).get();
+		if (roleBinding != null && roleBinding.getSubjects().size() > 0) {
+			return true;
+		}
+		return false;
+	}
+
+	public ClusterCredentials getClusterCredentials(User user, String group) {
+		final ClusterCredentials clusterCredentials = new ClusterCredentials();
+		final String namespaceId = getNamespaceId(user, group);
+		clusterCredentials.setApiserverUrl(clusterProperty.getApiserverUrl());
+		clusterCredentials.setNamespace(namespaceId);
+		clusterCredentials.setToken(user.getAuthToken());
+		clusterCredentials.setUser(getUserIdPrefixed(user.getId()));
+		clusterCredentials.setOnboarded(checkPermissionsExists(namespaceId));
+		clusterCredentials.setClusterName(clusterProperty.getClusterName());
+		return clusterCredentials;
+	}
+
+	private String getNamespaceId(User user, String group) {
+		if (group == null) {
 			return clusterProperty.getNamespacePrefix() + clusterProperty.getUserPrefix() + user.getId();
 		}
 		return clusterProperty.getNamespaceGroupPrefix() + clusterProperty.getGroupPrefix() + group;
-    }
+	}
 
-    private String getUserIdPrefixed(String id) {
-	return clusterProperty.getUserPrefix() + id;
-    }
+	private String getUserIdPrefixed(String id) {
+		return clusterProperty.getUserPrefix() + id;
+	}
 
 	private String getGroupIdPrefixed(String id) {
 		return clusterProperty.getGroupPrefix() + id;
