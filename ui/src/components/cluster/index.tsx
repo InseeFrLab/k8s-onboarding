@@ -143,7 +143,7 @@ const Cluster = () => {
 				<Tab label={preferred_username} value={0} />
 				{groups &&
 					groups.map((group: string, index: number) => (
-						<Tab label={group} value={index + 1} />
+						<Tab key={`tab-group-${index}`} label={group} value={index + 1} />
 					))}
 			</Tabs>
 			<Box m={4} />
@@ -152,7 +152,11 @@ const Cluster = () => {
 			</TabPanel>
 			{groups &&
 				groups.map((group: string, index: number) => (
-					<TabPanel value={activePanel} index={index + 1}>
+					<TabPanel
+						key={`panel-group-${index}`}
+						value={activePanel}
+						index={index + 1}
+					>
 						<Content token={token} group={group} />
 					</TabPanel>
 				))}

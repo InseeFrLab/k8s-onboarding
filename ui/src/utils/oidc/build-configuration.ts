@@ -4,10 +4,18 @@ export const buildOidcConfiguration = (baseConfig: OIDCBaseConfig) => (
 	customConfig: OIDCCustomConfig
 ) => {
 	const { authority, clientId } = customConfig;
+	const { origin } = window.location;
+	const updatedBaseConfigConfig = Object.entries(baseConfig.config).reduce(
+		(acc, [k, v]) => ({
+			...acc,
+			[k]: typeof v === 'string' ? v.replace('my_origin', origin) : v,
+		}),
+		{}
+	);
 	const configuration = {
 		...baseConfig,
-		origin: window.location.origin,
-		config: { ...baseConfig.config, authority, client_id: clientId },
+		origin,
+		config: { ...updatedBaseConfigConfig, authority, client_id: clientId },
 	};
 	return configuration;
 };
