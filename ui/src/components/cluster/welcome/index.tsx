@@ -9,6 +9,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import API from 'api';
 import Credentials from 'model/Credentials';
+import { useReactOidc } from '@axa-fr/react-oidc-context';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -92,8 +93,9 @@ export default function Welcome({
 	const [activeStep, setActiveStep] = React.useState(0);
 	const steps = getSteps(Boolean(group));
 
-	// TODO
-	const token = '';
+	const {
+		oidcUser: { access_token: token },
+	} = useReactOidc();
 
 	const handleNext = () => {
 		if (activeStep >= steps.length - 1) {
