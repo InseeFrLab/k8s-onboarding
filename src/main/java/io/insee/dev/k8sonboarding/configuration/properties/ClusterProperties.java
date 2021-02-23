@@ -17,6 +17,7 @@ public class ClusterProperties {
   private String nameNamespaceAdmin;
   private String apiserverUrl;
   private String clusterName;
+  private boolean insecure;
 
   public void setNamespacePrefix(String namespacePrefix) {
     this.namespacePrefix = namespacePrefix;
@@ -70,5 +71,13 @@ public class ClusterProperties {
 
   public String getNamespaceGroupPrefix() {
     return namespaceGroupPrefix;
+  }
+
+  public void setInsecure(boolean insecure) {
+    this.insecure = insecure;
+  }
+
+  public boolean getInsecure() {
+    return insecure;
   }
 }

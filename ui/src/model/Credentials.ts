@@ -5,4 +5,5 @@ export default interface Credentials {
 	user: string;
 	onboarded: boolean;
 	clusterName: string;
+	insecure?: boolean;
 }
