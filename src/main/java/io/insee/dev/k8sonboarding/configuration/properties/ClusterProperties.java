@@ -73,7 +73,7 @@ public class ClusterProperties {
     return namespaceGroupPrefix;
   }
 
-  public void setInsecure(String insecure) {
+  public void setInsecure(boolean insecure) {
     this.insecure = insecure;
   }
 
