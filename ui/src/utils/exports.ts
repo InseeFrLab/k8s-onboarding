@@ -11,9 +11,12 @@ export const exportTypes = [
 			token,
 			namespace,
 			clusterName,
+			insecure,
 		}: Credentials) =>
 			`#!/bin/sh
-kubectl config set-cluster ${clusterName} --server=${apiserverUrl}
+kubectl config set-cluster ${clusterName} --server=${apiserverUrl} ${
+				insecure ? '--insecure-skip-tls-verify=true' : ''
+			}
 kubectl config set-credentials ${user} --token ${token} 
 kubectl config set-context ${clusterName} --user=${user} --cluster=${clusterName} --namespace=${namespace}
 kubectl config use-context ${clusterName}`,
