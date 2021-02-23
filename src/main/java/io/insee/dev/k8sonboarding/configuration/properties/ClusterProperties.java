@@ -17,7 +17,7 @@ public class ClusterProperties {
   private String nameNamespaceAdmin;
   private String apiserverUrl;
   private String clusterName;
-  private Boolean insecure;
+  private boolean insecure;
 
   public void setNamespacePrefix(String namespacePrefix) {
     this.namespacePrefix = namespacePrefix;
@@ -77,7 +77,7 @@ public class ClusterProperties {
     this.insecure = insecure;
   }
 
-  public String getInsecure() {
+  public boolean getInsecure() {
     return insecure;
   }
 }
