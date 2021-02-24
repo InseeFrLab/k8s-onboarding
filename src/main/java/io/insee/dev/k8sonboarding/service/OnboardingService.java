@@ -117,6 +117,7 @@ public class OnboardingService {
 		clusterCredentials.setUser(getUserIdPrefixed(user.getId()));
 		clusterCredentials.setOnboarded(checkPermissionsExists(namespaceId));
 		clusterCredentials.setClusterName(clusterProperty.getClusterName());
+		clusterCredentials.setInsecure(clusterProperty.getInsecure());
 		return clusterCredentials;
 	}
 

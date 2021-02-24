@@ -7,6 +7,7 @@ public class ClusterCredentials {
     private boolean onboarded;
     private String user;
     private String clusterName;
+    private boolean insecure;
 
 
     public String getToken() {
@@ -55,5 +56,13 @@ public class ClusterCredentials {
 
     public void setClusterName(String clusterName) {
         this.clusterName = clusterName;
+    }
+
+    public boolean isInsecure() {
+        return insecure;
+    }
+
+    public void setInsecure(boolean insecure) {
+        this.insecure = insecure;
     }
 }

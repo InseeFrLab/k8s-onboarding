@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import useSWR from 'swr';
+import { Redirect } from 'react-router-dom';
 import {
 	AuthenticationProvider,
 	InMemoryWebStorage,
@@ -28,7 +29,7 @@ const App = () => {
 			.catch(() => {
 				console.error('error while fetch configuration');
 			});
-	}, [setConf]);
+	}, []);
 
 	if (loading || !oidcBaseConfig)
 		return (
@@ -47,7 +48,7 @@ const App = () => {
 				UserStore={InMemoryWebStorage}
 				callbackComponentOverride={Loader}
 				authenticating={Loader}
-				sessionLostComponent={Loader}
+				sessionLostComponent={() => <Redirect to="/" />}
 			>
 				<Root />
 			</AuthenticationProvider>
