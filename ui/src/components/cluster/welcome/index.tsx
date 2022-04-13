@@ -1,15 +1,15 @@
-import React from 'react';
-import { Loader } from 'components/commons';
-import ReactMarkdown from 'react-markdown';
-import { makeStyles } from '@material-ui/core/styles';
-import Stepper from '@material-ui/core/Stepper';
+import { useReactOidc } from '@axa-fr/react-oidc-context';
+import Button from '@material-ui/core/Button';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
-import Button from '@material-ui/core/Button';
+import Stepper from '@material-ui/core/Stepper';
+import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import API from 'api';
+import { Loader } from 'components/commons';
 import Credentials from 'model/Credentials';
-import { useReactOidc } from '@axa-fr/react-oidc-context';
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
