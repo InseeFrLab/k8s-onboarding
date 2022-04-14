@@ -2,8 +2,6 @@ package io.insee.dev.k8sonboarding.service;
 
 import java.util.Map;
 
-import io.fabric8.kubernetes.client.KubernetesClient;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +13,16 @@ import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.rbac.DoneableRoleBinding;
 import io.fabric8.kubernetes.api.model.rbac.RoleBinding;
 import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.insee.dev.k8sonboarding.configuration.KubernetesClientProvider;
 import io.insee.dev.k8sonboarding.configuration.properties.ClusterProperties;
-import io.insee.dev.k8sonboarding.controller.ClusterAccessController;
 import io.insee.dev.k8sonboarding.model.User;
 import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 
 @Service
 public class OnboardingService {
 
-	private static final Logger logger = LoggerFactory.getLogger(ClusterAccessController.class);
+	private static final Logger logger = LoggerFactory.getLogger(OnboardingService.class);
 
 	public static final String ADMIN = "admin";
 	public static final String API_GROUP = "rbac.authorization.k8s.io";
@@ -94,18 +92,15 @@ public class OnboardingService {
 		}
 	}
 
-	public Boolean checkNamespaceExists(String namespaceId) {
+	public boolean checkNamespaceExists(String namespaceId) {
 		final Namespace namespace = kubernetesClient.namespaces().withName(namespaceId).get();
 		return namespace != null;
 	}
 
-	public Boolean checkPermissionsExists(String namespaceId) {
+	public boolean checkPermissionsExists(String namespaceId) {
 		final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
 				.withName(clusterProperty.getNameNamespaceAdmin()).get();
-		if (roleBinding != null && roleBinding.getSubjects().size() > 0) {
-			return true;
-		}
-		return false;
+		return (roleBinding != null && !roleBinding.getSubjects().isEmpty());
 	}
 
 	public ClusterCredentials getClusterCredentials(User user, String group) {
@@ -124,7 +119,17 @@ public class OnboardingService {
 		if (group == null) {
 			return clusterProperty.getNamespacePrefix() + clusterProperty.getUserPrefix() + user.getId();
 		}
-		return clusterProperty.getNamespaceGroupPrefix() + clusterProperty.getGroupPrefix() + group;
+		return clusterProperty.getNamespaceGroupPrefix() + clusterProperty.getGroupPrefix() + sanitize(group);
+	}
+
+	private String sanitize(String rawGroup) {
+		if (rawGroup != null) {
+			var sanitizedGroup = rawGroup.toLowerCase();
+			var anythingButAlphanumericAndDash = "[^-a-z0-9]";
+			sanitizedGroup = sanitizedGroup.replaceAll(anythingButAlphanumericAndDash, "-");
+			return sanitizedGroup;
+		}
+		return rawGroup;
 	}
 
 	private String getUserIdPrefixed(String id) {

@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
 import { useReactOidc } from '@axa-fr/react-oidc-context';
-import Divider from '@material-ui/core/Divider';
-import Grid from '@material-ui/core/Grid';
+import { Tab, Tabs } from '@material-ui/core';
+import Box from '@material-ui/core/Box';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import Box from '@material-ui/core/Box';
-import { Loader, CopyableField, ExportCredentials } from 'components/commons';
+import Divider from '@material-ui/core/Divider';
+import Grid from '@material-ui/core/Grid';
 import API from 'api';
-import { exportTypes } from 'utils';
+import { CopyableField, ExportCredentials, Loader } from 'components/commons';
 import D from 'i18n';
-import './cluster.scss';
-import { Tabs, Tab } from '@material-ui/core';
-import Welcome from './welcome';
 import Credentials from 'model/Credentials';
+import React, { useEffect, useState } from 'react';
+import { exportTypes } from 'utils';
+import './cluster.scss';
+import Welcome from './welcome';
 
 function TabPanel(props: any) {
 	const { children, value, index, ...other } = props;
