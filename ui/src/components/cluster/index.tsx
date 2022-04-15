@@ -14,6 +14,8 @@ import React, { useEffect, useState } from 'react';
 import { exportTypes } from 'utils';
 import './cluster.scss';
 import Welcome from './welcome';
+import { filterGroups } from 'utils/filter-groups';
+import { OIDCCustomConfig } from 'model/Oidc';
 
 function TabPanel(props: any) {
 	const { children, value, index, ...other } = props;
@@ -119,10 +121,21 @@ const fields = [
 
 const Cluster = () => {
 	const [activePanel, setActivePanel] = useState(0);
+	const [groupFilter, setGroupFilter] = useState('');
 
 	const {
 		oidcUser: { access_token: token, profile: tokenParsed },
 	} = useReactOidc();
+
+	useEffect(() => {
+		API.conf()
+			.then((r: any) => {
+				setGroupFilter((r as OIDCCustomConfig).groupFilter || groupFilter);
+			})
+			.catch(() => {
+				console.error('error while fetch configuration');
+			});
+	}, [setGroupFilter, groupFilter]);
 
 	const { name, preferred_username, email, groups } = tokenParsed as any;
 
@@ -142,7 +155,10 @@ const Cluster = () => {
 			>
 				<Tab label={preferred_username} value={0} />
 				{groups &&
-					groups.map((group: string, index: number) => (
+					filterGroups(
+						groups,
+						groupFilter
+					).map((group: string, index: number) => (
 						<Tab key={`tab-group-${index}`} label={group} value={index + 1} />
 					))}
 			</Tabs>
@@ -151,15 +167,17 @@ const Cluster = () => {
 				<Content token={token} />
 			</TabPanel>
 			{groups &&
-				groups.map((group: string, index: number) => (
-					<TabPanel
-						key={`panel-group-${index}`}
-						value={activePanel}
-						index={index + 1}
-					>
-						<Content token={token} group={group} />
-					</TabPanel>
-				))}
+				filterGroups(groups, groupFilter).map(
+					(group: string, index: number) => (
+						<TabPanel
+							key={`panel-group-${index}`}
+							value={activePanel}
+							index={index + 1}
+						>
+							<Content token={token} group={group} />
+						</TabPanel>
+					)
+				)}
 		</>
 	);
 };

@@ -5,41 +5,50 @@ public class AppConfiguration {
     private String resource;
     private String clientId;
     private String authority;
+    private String groupFilter;
 
     public AppConfiguration() {
-	super();
+        super();
     }
 
     public String getAuthUrl() {
-	return authUrl;
+        return authUrl;
     }
 
     public void setAuthUrl(String authUrl) {
-	this.authUrl = authUrl;
+        this.authUrl = authUrl;
     }
 
     public String getResource() {
-	return resource;
+        return resource;
     }
 
     public void setResource(String resource) {
-	this.resource = resource;
+        this.resource = resource;
     }
 
     public String getClientId() {
-	return clientId;
+        return clientId;
     }
 
     public void setClientId(String clientId) {
-	this.clientId = clientId;
+        this.clientId = clientId;
     }
 
     public String getAuthority() {
-	return authority;
+        return authority;
     }
 
     public void setAuthority(String authority) {
-	this.authority = authority;
+        this.authority = authority;
+    }
+
+    public String getGroupFilter() {
+        return groupFilter;
+    }
+
+    public void setGroupFilter(String groupFilter) {
+        this.groupFilter = groupFilter;
     }
 
 }

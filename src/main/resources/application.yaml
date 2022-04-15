@@ -18,3 +18,4 @@ io.insee.dev.k8sonboarding:
   ui:
     clientId: "clientId"
     authority: "https://my_auth_server/auth/realms/my_realm"
+    groupeFilter:
