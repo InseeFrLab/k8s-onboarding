@@ -17,4 +17,5 @@ export interface OIDCBaseConfig {
 export interface OIDCCustomConfig {
 	authority?: string;
 	clientId?: string;
+	groupFilter?: string;
 }

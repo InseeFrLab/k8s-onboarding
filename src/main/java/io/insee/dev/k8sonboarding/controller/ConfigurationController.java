@@ -25,6 +25,7 @@ public class ConfigurationController {
         appConfiguration.setResource(uiProperties.getClientId());
         appConfiguration.setAuthority(uiProperties.getAuthority());
         appConfiguration.setClientId(uiProperties.getClientId());
+        appConfiguration.setGroupFilter(uiProperties.getGroupFilter());
         return appConfiguration;
     }
 

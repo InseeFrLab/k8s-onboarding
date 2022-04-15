@@ -9,17 +9,18 @@ public class UiProperties {
 
     private String clientId;
     private String authority;
+    private String groupFilter;
 
     public UiProperties() {
-	super();
+        super();
     }
 
     public String getClientId() {
-	return clientId;
+        return clientId;
     }
 
     public void setClientId(String clientId) {
-	this.clientId = clientId;
+        this.clientId = clientId;
     }
 
     public String getAuthority() {
@@ -28,6 +29,14 @@ public class UiProperties {
 
     public void setAuthority(String authority) {
         this.authority = authority;
+    }
+
+    public String getGroupFilter() {
+        return groupFilter;
+    }
+
+    public void setGroupFilter(String groupFilter) {
+        this.groupFilter = groupFilter;
     }
 
 }
