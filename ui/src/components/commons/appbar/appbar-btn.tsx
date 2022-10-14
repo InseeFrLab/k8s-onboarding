@@ -1,24 +1,24 @@
 import React from 'react';
-import { useReactOidc } from '@axa-fr/react-oidc-context';
-import { useHistory } from 'react-router-dom';
-import { Button } from '@material-ui/core/';
+import { useOidc } from '@axa-fr/react-oidc';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@mui/material/';
 import D from 'i18n';
-import PersonOutlineSharpIcon from '@material-ui/icons/PersonOutlineSharp';
+import PersonOutlineSharpIcon from '@mui/icons-material/PersonOutlineSharp';
 import './appbar.scss';
 
 const AppBarBtn = () => {
-	const { oidcUser, logout } = useReactOidc();
+	const { logout, isAuthenticated } = useOidc();
 
-	const { push } = useHistory();
+	const navigate = useNavigate();
 
 	const action: any = () => {
-		if (oidcUser) {
-			logout();
+		if (isAuthenticated) {
+			logout().then(() => navigate('/'));
 		} else {
-			push('/cluster');
+			navigate('/cluster');
 		}
 	};
-	const label: string = oidcUser ? D.logout : D.login;
+	const label: string = isAuthenticated ? D.logout : D.login;
 
 	return (
 		<Button
