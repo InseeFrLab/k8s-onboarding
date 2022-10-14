@@ -1,17 +1,10 @@
 import React, { useRef } from 'react';
-import {
-	InputAdornment,
-	Input,
-	InputLabel,
-	Typography,
-} from '@material-ui/core';
-import FormControl from '@material-ui/core/FormControl';
-import * as clipboard from 'clipboard-polyfill';
-import { IconButton } from '@material-ui/core';
-import FileCopy from '@material-ui/icons/FileCopy';
+import { InputAdornment, Input, InputLabel, Typography } from '@mui/material';
+import FormControl from '@mui/material/FormControl';
+import { IconButton } from '@mui/material';
+import FileCopy from '@mui/icons-material/FileCopy';
 import D from 'i18n';
 import './copyable-field.scss';
-
 interface Props {
 	value: string;
 	description?: string;
@@ -22,19 +15,18 @@ interface Props {
 
 const CopyableField = ({ value, description, label, copy, row }: Props) => {
 	const ref = useRef();
-
 	const onCopy = () => {
-		clipboard.writeText(value);
+		navigator.clipboard.writeText(value);
 		return false;
 	};
 	return (
 		<div className={`row ${row % 2 !== 0 ? '' : 'row-major'}`}>
 			{description && (
-				<Typography variant="body1" align="left">
+				<Typography variant="body1" justifyContent="left">
 					{description}
 				</Typography>
 			)}
-			<FormControl style={{ width: '100%' }}>
+			<FormControl fullWidth variant="standard">
 				{label ? <InputLabel>{label}</InputLabel> : null}
 				<Input
 					ref={ref}

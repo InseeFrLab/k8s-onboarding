@@ -1,15 +1,22 @@
 import React from 'react';
-import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
-import { withOidcSecure } from '@axa-fr/react-oidc-context';
+import {
+	Route,
+	Routes as Switch,
+	Navigate,
+	useLocation,
+} from 'react-router-dom';
+import { withOidcSecure } from '@axa-fr/react-oidc';
 import Cluster from 'components/cluster';
 
 const Routes = () => {
 	const { pathname } = useLocation();
 	return (
 		<Switch>
-			<Route exact path="/" component={() => <div />} />
-			<Route exact path="/cluster" component={withOidcSecure(Cluster)} />
-			{!pathname.startsWith('/authentication') && <Redirect to="/" />}
+			<Route path="/" element={<div />} />
+			<Route path="/cluster" element={withOidcSecure(Cluster)({})} />
+			{!pathname.startsWith('/authentication') && (
+				<Route element={<Navigate to="/" />} />
+			)}
 		</Switch>
 	);
 };

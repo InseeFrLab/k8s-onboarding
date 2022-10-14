@@ -1,8 +1,7 @@
 export const dictionary = {
 	appTitle: { fr: 'Onboarding Kubernetes', en: 'Onboarding Kubernetes' },
 	appDescription: {
-		fr:
-			"Déployer n'importe quelle application conteneurisée en décrivant complètement sa configuration, les différents modules applicatifs et leurs interactions",
+		fr: "Déployer n'importe quelle application conteneurisée en décrivant complètement sa configuration, les différents modules applicatifs et leurs interactions",
 		en: 'Deploy ...',
 	},
 	header_button_tutorial: { fr: 'Suivre un pas à pas', en: 'Get Started' },
