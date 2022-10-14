@@ -1,6 +1,6 @@
 import D from 'i18n';
 import React from 'react';
-import { Divider, Typography, Grid, Box } from '@material-ui/core/';
+import { Divider, Typography, Grid, Box } from '@mui/material/';
 import AppBar from '../appbar';
 import './header.scss';
 
@@ -9,7 +9,12 @@ const Header = () => {
 		<>
 			<AppBar displayBtn />
 			<Box m={10} />
-			<Grid container justify="center" alignItems="baseline" direction="column">
+			<Grid
+				container
+				justifyContent="center"
+				alignItems="baseline"
+				direction="column"
+			>
 				<Grid>
 					<Typography variant="body1" gutterBottom className="description">
 						{D.appDescription}

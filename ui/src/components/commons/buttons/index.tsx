@@ -1,13 +1,12 @@
 import React from 'react';
-import { FileCopy, Save } from '@material-ui/icons';
-import { IconButton } from '@material-ui/core';
+import { FileCopy, Save } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
 import { saveAs } from 'file-saver';
-import * as clipboard from 'clipboard-polyfill';
 import D from 'i18n';
 
-const CopyButton = ({ content }) => {
+const CopyButton = ({ content }: any) => {
 	const copy = () => {
-		clipboard.writeText(content);
+		navigator.clipboard.writeText(content);
 		return false;
 	};
 	return (
@@ -17,7 +16,7 @@ const CopyButton = ({ content }) => {
 	);
 };
 
-const ExportFileButton = ({ fileName, content }) => {
+const ExportFileButton = ({ fileName, content }: any) => {
 	const save = () => {
 		var blob = new Blob([content], {
 			type: 'text/plain;charset=utf-8',

@@ -1,21 +1,21 @@
-import { useReactOidc } from '@axa-fr/react-oidc-context';
-import { Tab, Tabs } from '@material-ui/core';
-import Box from '@material-ui/core/Box';
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
-import CardHeader from '@material-ui/core/CardHeader';
-import Divider from '@material-ui/core/Divider';
-import Grid from '@material-ui/core/Grid';
+import { useOidcAccessToken } from '@axa-fr/react-oidc';
+import { Tab, Tabs } from '@mui/material';
+import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
+import Grid from '@mui/material/Grid';
 import API from 'api';
 import { CopyableField, ExportCredentials, Loader } from 'components/commons';
 import D from 'i18n';
 import Credentials from 'model/Credentials';
 import React, { useEffect, useState } from 'react';
 import { exportTypes } from 'utils';
-import './cluster.scss';
 import Welcome from './welcome';
 import { filterGroups } from 'utils/filter-groups';
 import { OIDCCustomConfig } from 'model/Oidc';
+import './cluster.scss';
 
 function TabPanel(props: any) {
 	const { children, value, index, ...other } = props;
@@ -123,9 +123,7 @@ const Cluster = () => {
 	const [activePanel, setActivePanel] = useState(0);
 	const [groupFilter, setGroupFilter] = useState('');
 
-	const {
-		oidcUser: { access_token: token, profile: tokenParsed },
-	} = useReactOidc();
+	const { accessToken, accessTokenPayload } = useOidcAccessToken();
 
 	useEffect(() => {
 		API.conf()
@@ -137,7 +135,7 @@ const Cluster = () => {
 			});
 	}, [setGroupFilter, groupFilter]);
 
-	const { name, preferred_username, email, groups } = tokenParsed as any;
+	const { name, preferred_username, email, groups } = accessTokenPayload as any;
 
 	return (
 		<>
@@ -155,16 +153,15 @@ const Cluster = () => {
 			>
 				<Tab label={preferred_username} value={0} />
 				{groups &&
-					filterGroups(
-						groups,
-						groupFilter
-					).map((group: string, index: number) => (
-						<Tab key={`tab-group-${index}`} label={group} value={index + 1} />
-					))}
+					filterGroups(groups, groupFilter).map(
+						(group: string, index: number) => (
+							<Tab key={`tab-group-${index}`} label={group} value={index + 1} />
+						)
+					)}
 			</Tabs>
 			<Box m={4} />
 			<TabPanel value={activePanel} index={0}>
-				<Content token={token} />
+				<Content token={accessToken} />
 			</TabPanel>
 			{groups &&
 				filterGroups(groups, groupFilter).map(
@@ -174,7 +171,7 @@ const Cluster = () => {
 							value={activePanel}
 							index={index + 1}
 						>
-							<Content token={token} group={group} />
+							<Content token={accessToken} group={group} />
 						</TabPanel>
 					)
 				)}

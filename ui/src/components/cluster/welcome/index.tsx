@@ -1,28 +1,15 @@
-import { useReactOidc } from '@axa-fr/react-oidc-context';
-import Button from '@material-ui/core/Button';
-import Step from '@material-ui/core/Step';
-import StepLabel from '@material-ui/core/StepLabel';
-import Stepper from '@material-ui/core/Stepper';
-import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
+import { useOidcAccessToken } from '@axa-fr/react-oidc';
+import Button from '@mui/material/Button';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import Stepper from '@mui/material/Stepper';
+import { useTheme } from '@mui/material/styles';
+import Typography from '@mui/material/Typography';
 import API from 'api';
 import { Loader } from 'components/commons';
 import Credentials from 'model/Credentials';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
-
-const useStyles = makeStyles((theme) => ({
-	root: {
-		width: '100%',
-	},
-	backButton: {
-		marginRight: theme.spacing(1),
-	},
-	instructions: {
-		marginTop: theme.spacing(1),
-		marginBottom: theme.spacing(1),
-	},
-}));
 
 function getSteps(isGroup: boolean) {
 	return [
@@ -89,13 +76,25 @@ export default function Welcome({
 	credentials?: Credentials;
 	onFinish?: () => void;
 }) {
-	const classes = useStyles();
+	const theme = useTheme();
+
+	const style = {
+		root: {
+			width: '100%',
+		},
+		backButton: {
+			marginRight: theme.spacing(1),
+		},
+		instructions: {
+			marginTop: theme.spacing(1),
+			marginBottom: theme.spacing(1),
+		},
+	};
+
 	const [activeStep, setActiveStep] = React.useState(0);
 	const steps = getSteps(Boolean(group));
 
-	const {
-		oidcUser: { access_token: token },
-	} = useReactOidc();
+	const { accessToken: token } = useOidcAccessToken();
 
 	const handleNext = () => {
 		if (activeStep >= steps.length - 1) {
@@ -126,7 +125,7 @@ export default function Welcome({
 	if (!credentials) return <Loader />;
 
 	return (
-		<div className={classes.root}>
+		<div style={style.root}>
 			<Stepper activeStep={activeStep} alternativeLabel>
 				{steps.map((label) => (
 					<Step key={label}>
@@ -137,9 +136,7 @@ export default function Welcome({
 			<div>
 				{activeStep === steps.length ? (
 					<div>
-						<Typography className={classes.instructions}>
-							All steps completed
-						</Typography>
+						<Typography sx={style.instructions}>All steps completed</Typography>
 						<Button onClick={handleReset}>Reset</Button>
 					</div>
 				) : (
