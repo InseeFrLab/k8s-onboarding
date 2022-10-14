@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import io.fabric8.kubernetes.api.model.DoneableNamespace;
 import io.fabric8.kubernetes.api.model.Namespace;
-import io.fabric8.kubernetes.api.model.rbac.DoneableRoleBinding;
+import io.fabric8.kubernetes.api.model.NamespaceBuilder;
 import io.fabric8.kubernetes.api.model.rbac.RoleBinding;
+import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder;
 import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.insee.dev.k8sonboarding.configuration.KubernetesClientProvider;
@@ -59,9 +59,9 @@ public class OnboardingService {
 		String namespaceId = getNamespaceId(user, groupId);
 		if (!checkNamespaceExists(namespaceId)) {
 			logger.info("creating namespace {}", namespaceId);
-			final DoneableNamespace namespaceToCreate = kubernetesClient.namespaces().createNew().withNewMetadata()
-					.withName(namespaceId).addToLabels(LABEL_CREATED_BY, appName).endMetadata();
-			namespaceToCreate.done();
+			Namespace ns = new NamespaceBuilder().withNewMetadata().withName(namespaceId)
+					.addToLabels(LABEL_CREATED_BY, appName).endMetadata().build();
+			kubernetesClient.namespaces().resource(ns).create();
 		}
 	}
 
@@ -77,8 +77,8 @@ public class OnboardingService {
 		final String groupId = getGroupIdPrefixed(group);
 		if (checkNamespaceExists(namespaceId) && !checkPermissionsExists(namespaceId)) {
 			logger.info("creating rolebinding for user {}", userId);
-			DoneableRoleBinding bindingToCreate = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
-					.createNew().withNewMetadata().withLabels(Map.of(LABEL_CREATED_BY, appName))
+			RoleBindingBuilder bindingToCreate = new RoleBindingBuilder().withNewMetadata()
+					.withLabels(Map.of(LABEL_CREATED_BY, appName))
 					.withName(clusterProperty.getNameNamespaceAdmin()).withNamespace(namespaceId).endMetadata()
 					.withNewRoleRef().withApiGroup(API_GROUP).withKind(CLUSTER_ROLE).withName(ADMIN).endRoleRef();
 			if (group == null) {
@@ -88,7 +88,7 @@ public class OnboardingService {
 				bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(GROUP).withName(groupId)
 						.withApiGroup(API_GROUP).withNamespace(namespaceId).build());
 			}
-			bindingToCreate.done();
+			kubernetesClient.resource(bindingToCreate.build()).inNamespace(namespaceId).create();
 		}
 	}
 
