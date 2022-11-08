@@ -32,19 +32,9 @@ public class ClusterAccessController {
         return onboardingService.getClusterCredentials(userProvider.getUser(auth), groupId);
     }
 
-    @PostMapping("/namespace")
-    public void createNamespaceForUser(Authentication auth) {
-        onboardingService.createNamespace(userProvider.getUser(auth), null);
-    }
-
     @PostMapping("/namespace/{groupId}")
     public void createNamespaceForGroup(Authentication auth, @PathVariable String groupId) {
         onboardingService.createNamespace(userProvider.getUser(auth), groupId);
-    }
-
-    @PostMapping("/permissions")
-    public void addPermissionsForUser(Authentication auth) {
-        onboardingService.addPermissionsToNamespace(userProvider.getUser(auth), null);
     }
 
     @PostMapping("/permissions/{groupId}")

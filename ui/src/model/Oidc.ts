@@ -19,3 +19,7 @@ export interface OIDCCustomConfig {
 	clientId?: string;
 	groupFilter?: string;
 }
+
+export interface UIProperties extends OIDCCustomConfig {
+	userNamespaceEnabled?: string;
+}
