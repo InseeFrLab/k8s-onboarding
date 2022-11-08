@@ -1,5 +1,6 @@
 package io.insee.dev.k8sonboarding.service;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.NamespaceBuilder;
+import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.api.model.ResourceQuota;
+import io.fabric8.kubernetes.api.model.ResourceQuotaBuilder;
+import io.fabric8.kubernetes.api.model.ResourceQuotaSpec;
 import io.fabric8.kubernetes.api.model.rbac.RoleBinding;
 import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder;
 import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
@@ -22,7 +27,7 @@ import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 @Service
 public class OnboardingService {
 
-	private static final Logger logger = LoggerFactory.getLogger(OnboardingService.class);
+    private static final Logger logger = LoggerFactory.getLogger(OnboardingService.class);
 
 	public static final String ADMIN = "admin";
 	public static final String API_GROUP = "rbac.authorization.k8s.io";
@@ -31,9 +36,19 @@ public class OnboardingService {
 	public static final String LABEL_CREATED_BY = "created_by";
 	public static final String CLUSTER_ROLE = "ClusterRole";
 
+	public static final String NO_QUOTA_VALUE="0";
+	public static final String RESOURCE_QUOTA_REQUESTS_STORAGE = "requests.storage";
+	
 	@Value("${spring.application.name:k8s-onboarding}")
 	private String appName;
 
+	
+	@Value("${io.insee.dev.k8sonboarding.namespace-quota.group-storage}")
+    private String groupStorageQuota;
+	
+	@Value("${io.insee.dev.k8sonboarding.namespace-quota.user-storage}")
+    private String userStorageQuota;
+	
 	@Autowired
 	ClusterProperties clusterProperty;
 
@@ -61,9 +76,37 @@ public class OnboardingService {
 			logger.info("creating namespace {}", namespaceId);
 			Namespace ns = new NamespaceBuilder().withNewMetadata().withName(namespaceId)
 					.addToLabels(LABEL_CREATED_BY, appName).endMetadata().build();
-			kubernetesClient.namespaces().resource(ns).create();
+			kubernetesClient.namespaces().resource(ns).create();			
+	        createNamespaceQuota(namespaceId, groupId==null ? userStorageQuota: groupStorageQuota);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param namespaceId
+	 * @param storageQuota if value == "0" then ignored
+	 */
+    private void createNamespaceQuota(String namespaceId, String storageQuota) {
+        if (NO_QUOTA_VALUE.equals(storageQuota)) {
+            logger.info("pas de quota defini pour les namespaces");
+            return;
+        } 
+        logger.info("application des quotas {} sur namespace {}", storageQuota, namespaceId);
+        
+        ResourceQuotaSpec quotaSpec = new ResourceQuotaSpec();
+        Map<String, Quantity> mp = new HashMap<>();
+        mp.put(RESOURCE_QUOTA_REQUESTS_STORAGE, new Quantity(storageQuota));
+        quotaSpec.setHard(mp);
+        
+        ResourceQuota quota = new ResourceQuotaBuilder().withNewMetadata()
+                .withLabels(Map.of(LABEL_CREATED_BY, appName))
+                .withName(namespaceId)
+                .withNamespace(namespaceId).endMetadata()
+                .withSpec(quotaSpec)
+                .build();
+        
+        kubernetesClient.resource(quota).inNamespace(namespaceId).createOrReplace();
+   }
 
 	/**
 	 * Currently, namespaceid is ignored
@@ -87,18 +130,22 @@ public class OnboardingService {
 			} else {
 				bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(GROUP).withName(groupId)
 						.withApiGroup(API_GROUP).withNamespace(namespaceId).build());
-			}
+			}		
+					
+			
 			kubernetesClient.resource(bindingToCreate.build()).inNamespace(namespaceId).create();
 		}
 	}
 
-	public boolean checkNamespaceExists(String namespaceId) {
+	
+
+      public boolean checkNamespaceExists(String namespaceId) {
 		final Namespace namespace = kubernetesClient.namespaces().withName(namespaceId).get();
 		return namespace != null;
 	}
 
-	public boolean checkPermissionsExists(String namespaceId) {
-		final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
+	public boolean checkPermissionsExists(String namespaceId) {	    
+	    final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
 				.withName(clusterProperty.getNameNamespaceAdmin()).get();
 		return (roleBinding != null && !roleBinding.getSubjects().isEmpty());
 	}
