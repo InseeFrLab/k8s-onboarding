@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:19-jdk-alpine
 RUN apk add --no-cache coreutils
 ADD scripts/x509.sh /app/x509.sh
 ADD target/k8s-onboarding-0.0.1-SNAPSHOT.jar /app/k8s-onboarding.jar
