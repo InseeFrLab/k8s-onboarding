@@ -10,7 +10,7 @@ public class UiProperties {
     private String clientId;
     private String authority;
     private String groupFilter;
-
+    private String userNamespaceEnabled;
     public UiProperties() {
         super();
     }
@@ -39,4 +39,11 @@ public class UiProperties {
         this.groupFilter = groupFilter;
     }
 
+    public String getUserNamespaceEnabled() {
+        return userNamespaceEnabled;
+    }
+
+    public void setUserNamespaceEnabled(String userNamespaceEnabled) {
+        this.userNamespaceEnabled = userNamespaceEnabled;
+    }
 }

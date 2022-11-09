@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import { exportTypes } from 'utils';
 import Welcome from './welcome';
 import { filterGroups } from 'utils/filter-groups';
-import { OIDCCustomConfig } from 'model/Oidc';
+import { UIProperties } from 'model/Oidc';
 import './cluster.scss';
 
 function TabPanel(props: any) {
@@ -37,6 +37,21 @@ function TabPanel(props: any) {
 		</div>
 	);
 }
+
+const DocCard = () => {
+	return (
+		<Card className="card" elevation={16}>
+			<CardHeader title={D.cardDocTitle} className="card-title" />
+			<Divider />
+			<CardContent>
+				<p>{D.docDescription}</p>
+				<a href="https://kubernetes.io/fr/docs/home/" className="git-link">
+					https://kubernetes.io/fr/docs/home/
+				</a>
+			</CardContent>
+		</Card>
+	);
+};
 
 const Content = ({ token, group }: { token?: string; group?: string }) => {
 	const [cluster, setCluster] = useState<Credentials>();
@@ -94,22 +109,33 @@ const Content = ({ token, group }: { token?: string; group?: string }) => {
 				</Card>
 			</Grid>
 			<Grid item lg={4} md={4} xs={12}>
-				<Card className="card" elevation={16}>
-					<CardHeader title={D.cardDocTitle} className="card-title" />
-					<Divider />
-					<CardContent>
-						<p>{D.docDescription}</p>
-						<a href="https://kubernetes.io/fr/docs/home/" className="git-link">
-							https://kubernetes.io/fr/docs/home/
-						</a>
-					</CardContent>
-				</Card>
+				<DocCard />
 			</Grid>
 			<Grid item lg={1} />
 		</Grid>
 	);
 };
 
+const NoopContent = () => {
+	return (
+		<Grid container className="cards" spacing={2}>
+			<Grid item lg={1} />
+			<Grid item lg={6} md={8} xs={12}>
+				<Card className="card" elevation={16}>
+					<CardHeader title="Information" className="card-title" />
+					<Divider />
+					<CardContent>
+						Pour ce cluster, aucune opération n'est possible côté namespace
+						utilisateur
+					</CardContent>
+				</Card>
+			</Grid>
+			<Grid item lg={4} md={4} xs={12}>
+				<DocCard />
+			</Grid>
+		</Grid>
+	);
+};
 const fields = [
 	{
 		accessor: 'apiserverUrl',
@@ -121,19 +147,25 @@ const fields = [
 
 const Cluster = () => {
 	const [activePanel, setActivePanel] = useState(0);
-	const [groupFilter, setGroupFilter] = useState('');
-
+	const [config, setConfig] = useState({
+		groupFilter: '',
+		userEnabled: 'false',
+	});
+	const { groupFilter, userEnabled } = config;
 	const { accessToken, accessTokenPayload } = useOidcAccessToken();
 
 	useEffect(() => {
 		API.conf()
-			.then((r: any) => {
-				setGroupFilter((r as OIDCCustomConfig).groupFilter || groupFilter);
+			.then((r: UIProperties) => {
+				setConfig({
+					groupFilter: r.groupFilter || groupFilter,
+					userEnabled: r.userNamespaceEnabled || userEnabled,
+				});
 			})
 			.catch(() => {
 				console.error('error while fetch configuration');
 			});
-	}, [setGroupFilter, groupFilter]);
+	}, [setConfig, groupFilter, userEnabled]);
 
 	const { name, preferred_username, email, groups } = accessTokenPayload as any;
 
@@ -152,6 +184,7 @@ const Cluster = () => {
 				aria-label="scrollable auto tabs example"
 			>
 				<Tab label={preferred_username} value={0} />
+
 				{groups &&
 					filterGroups(groups, groupFilter).map(
 						(group: string, index: number) => (
@@ -161,7 +194,11 @@ const Cluster = () => {
 			</Tabs>
 			<Box m={4} />
 			<TabPanel value={activePanel} index={0}>
-				<Content token={accessToken} />
+				{userEnabled === 'true' ? (
+					<Content token={accessToken} />
+				) : (
+					<NoopContent />
+				)}
 			</TabPanel>
 			{groups &&
 				filterGroups(groups, groupFilter).map(
