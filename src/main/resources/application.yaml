@@ -20,3 +20,4 @@ io.insee.dev.k8sonboarding:
     clientId: "clientId"
     authority: "https://my_auth_server/auth/realms/my_realm"
     groupeFilter:
+    user-namespace-enabled: true
