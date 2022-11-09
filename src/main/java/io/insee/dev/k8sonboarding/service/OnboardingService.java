@@ -77,7 +77,7 @@ public class OnboardingService {
 			Namespace ns = new NamespaceBuilder().withNewMetadata().withName(namespaceId)
 					.addToLabels(LABEL_CREATED_BY, appName).endMetadata().build();
 			kubernetesClient.namespaces().resource(ns).create();			
-	        createNamespaceQuota(namespaceId, groupId==null ? userStorageQuota: groupStorageQuota);
+	    createNamespaceQuota(namespaceId, groupId==null ? userStorageQuota: groupStorageQuota);
 		}
 	}
 	
@@ -131,8 +131,6 @@ public class OnboardingService {
 				bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(GROUP).withName(groupId)
 						.withApiGroup(API_GROUP).withNamespace(namespaceId).build());
 			}		
-					
-			
 			kubernetesClient.resource(bindingToCreate.build()).inNamespace(namespaceId).create();
 		}
 	}
