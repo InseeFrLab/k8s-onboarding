@@ -6,6 +6,9 @@ io.insee.dev.k8sonboarding:
   apiserver-url: "https://example.com"
   namespace-prefix: "dev-"
   namespace-group-prefix: "gr-"
+  namespace-quota:
+    group-storage: 10
+    user-storage: 10
   user-prefix:
   group-prefix:
   name-namespace-admin: "namespace_admin"

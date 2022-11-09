@@ -10,6 +10,7 @@
 		"scope": "openid profile email",
 		"silent_redirect_uri": "my_origin/authentication/silent_callback",
 		"automaticSilentRenew": true,
-		"loadUserInfo": true
+		"loadUserInfo": true,
+		"json_path_to_roles": "realm_access/roles"
 	}
 }
