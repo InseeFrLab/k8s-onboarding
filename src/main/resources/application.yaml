@@ -7,12 +7,12 @@ io.insee.dev.k8sonboarding:
   namespace-prefix: "dev-"
   namespace-group-prefix: "gr-"
   namespace-quota:
-    memoryRequests: 10
+    memoryRequests: 10Gi
     cpuRequests: 8
-    memoryLimits: 16
+    memoryLimits: 16Gi
     cpuLimits: 10
-    storageRequests: 10
-    podsCount: 20
+    storageRequests: 10Gi
+    podsCount: 40
   user-prefix:
   group-prefix:
   name-namespace-admin: "namespace_admin"
