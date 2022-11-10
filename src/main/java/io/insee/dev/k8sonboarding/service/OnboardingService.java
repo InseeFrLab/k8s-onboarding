@@ -1,6 +1,5 @@
 package io.insee.dev.k8sonboarding.service;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -14,13 +13,15 @@ import io.fabric8.kubernetes.api.model.NamespaceBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceQuota;
 import io.fabric8.kubernetes.api.model.ResourceQuotaBuilder;
-import io.fabric8.kubernetes.api.model.ResourceQuotaSpec;
+import io.fabric8.kubernetes.api.model.ResourceQuotaFluent;
 import io.fabric8.kubernetes.api.model.rbac.RoleBinding;
 import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder;
 import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.insee.dev.k8sonboarding.configuration.KubernetesClientProvider;
 import io.insee.dev.k8sonboarding.configuration.properties.ClusterProperties;
+import io.insee.dev.k8sonboarding.configuration.properties.QuotaProperties;
 import io.insee.dev.k8sonboarding.model.User;
 import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 
@@ -41,13 +42,9 @@ public class OnboardingService {
 	
 	@Value("${spring.application.name:k8s-onboarding}")
 	private String appName;
-
 	
-	@Value("${io.insee.dev.k8sonboarding.namespace-quota.group-storage}")
-    private String groupStorageQuota;
-	
-	@Value("${io.insee.dev.k8sonboarding.namespace-quota.user-storage}")
-    private String userStorageQuota;
+	@Autowired
+    QuotaProperties quotaProperties;
 	
 	@Autowired
 	ClusterProperties clusterProperty;
@@ -77,37 +74,54 @@ public class OnboardingService {
 			Namespace ns = new NamespaceBuilder().withNewMetadata().withName(namespaceId)
 					.addToLabels(LABEL_CREATED_BY, appName).endMetadata().build();
 			kubernetesClient.namespaces().resource(ns).create();			
-	    createNamespaceQuota(namespaceId, groupId==null ? userStorageQuota: groupStorageQuota);
+	    
+	    applyQuotas(namespaceId, quotaProperties, true);
 		}
 	}
-	
-	/**
-	 * 
-	 * @param namespaceId
-	 * @param storageQuota if value == "0" then ignored
-	 */
-    private void createNamespaceQuota(String namespaceId, String storageQuota) {
-        if (NO_QUOTA_VALUE.equals(storageQuota)) {
-            logger.info("pas de quota defini pour les namespaces");
-            return;
-        } 
-        logger.info("application des quotas {} sur namespace {}", storageQuota, namespaceId);
-        
-        ResourceQuotaSpec quotaSpec = new ResourceQuotaSpec();
-        Map<String, Quantity> mp = new HashMap<>();
-        mp.put(RESOURCE_QUOTA_REQUESTS_STORAGE, new Quantity(storageQuota));
-        quotaSpec.setHard(mp);
-        
-        ResourceQuota quota = new ResourceQuotaBuilder().withNewMetadata()
+	    
+    /**
+     * 
+     * @param namespaceId
+     * @param inputQuota
+     * @param overrideExisting
+     */
+    private void applyQuotas(String namespaceId, QuotaProperties inputQuota, boolean overrideExisting) {
+        ResourceQuotaBuilder resourceQuotaBuilder = new ResourceQuotaBuilder();
+        resourceQuotaBuilder.withNewMetadata()
                 .withLabels(Map.of(LABEL_CREATED_BY, appName))
                 .withName(namespaceId)
-                .withNamespace(namespaceId).endMetadata()
-                .withSpec(quotaSpec)
-                .build();
-        
-        kubernetesClient.resource(quota).inNamespace(namespaceId).createOrReplace();
-   }
+                .withNamespace(namespaceId)
+                .endMetadata();
 
+        Map<String, String> quotasToApply = inputQuota.asMap();
+
+        if (quotasToApply.entrySet().stream().filter(e -> e.getValue() != null).count() == 0) {
+            return;
+        }
+
+        ResourceQuotaFluent.SpecNested<ResourceQuotaBuilder> resourceQuotaBuilderSpecNested = resourceQuotaBuilder
+                .withNewSpec();
+        quotasToApply.entrySet().stream().filter(e -> e.getValue() != null).forEach(e -> resourceQuotaBuilderSpecNested.addToHard(e.getKey(),Quantity.parse(e.getValue())));
+        resourceQuotaBuilderSpecNested.endSpec();
+
+        ResourceQuota quota = resourceQuotaBuilder.build();
+        if (overrideExisting) {
+            kubernetesClient.resource(quota).inNamespace(namespaceId).createOrReplace();
+        }
+        else {
+            try {
+                kubernetesClient.resource(quota).inNamespace(namespaceId).create();
+            }
+            catch (KubernetesClientException e) {
+                if (e.getCode() != 409) {
+                    // This is not a "quota already in place" error
+                    throw e;
+                }
+            }
+        }
+    }
+    
+    
 	/**
 	 * Currently, namespaceid is ignored
 	 *
