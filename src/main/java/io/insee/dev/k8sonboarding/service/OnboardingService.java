@@ -2,6 +2,7 @@ package io.insee.dev.k8sonboarding.service;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,9 @@ public class OnboardingService {
 
 	@Autowired
 	private KubernetesClient kubernetesClient;
+
+	@Value("${io.insee.dev.k8sonboarding.does-remove-suffix}")
+	private boolean doesRemoveSuffix;
 
 	public OnboardingService(ClusterProperties clusterProperty, KubernetesClientProvider kubernetesClientProvider) {
 		super();
@@ -179,17 +183,25 @@ public class OnboardingService {
 		if (group == null) {
 			return clusterProperty.getNamespacePrefix() + clusterProperty.getUserPrefix() + user.getId();
 		}
-		return clusterProperty.getNamespaceGroupPrefix() + clusterProperty.getGroupPrefix() + sanitize(group);
+		String cleanedAndSanitizedGroup = sanitize(optionallyRemoveSuffix(group));
+		return clusterProperty.getNamespaceGroupPrefix() + clusterProperty.getGroupPrefix() + cleanedAndSanitizedGroup;
 	}
 
-	private String sanitize(String rawGroup) {
-		if (rawGroup != null) {
-			var sanitizedGroup = rawGroup.toLowerCase();
+	private String optionallyRemoveSuffix(String rawGroup) {
+		if (doesRemoveSuffix){
+			return StringUtils.substringBefore(rawGroup, '_');
+		}
+		return rawGroup;
+	}
+
+	private String sanitize(String cleanedGroup) {
+		if (cleanedGroup != null) {
+			var sanitizedGroup = cleanedGroup.toLowerCase();
 			var anythingButAlphanumericAndDash = "[^-a-z0-9]";
 			sanitizedGroup = sanitizedGroup.replaceAll(anythingButAlphanumericAndDash, "-");
 			return sanitizedGroup;
 		}
-		return rawGroup;
+		return cleanedGroup;
 	}
 
 	private String getUserIdPrefixed(String id) {

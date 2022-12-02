@@ -17,6 +17,7 @@ io.insee.dev.k8sonboarding:
   group-prefix:
   name-namespace-admin: "namespace_admin"
   insecure: "false"
+  does-remove-suffix: false
   jwt:
     username-claim: "preferred_username"
   swagger:
