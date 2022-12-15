@@ -5,4 +5,5 @@ export interface API {
 	cluster: (string?, string?) => Promise<Credentials>;
 	createNamespace: (string?, string?) => Promise<any>;
 	setPermissionsToNamespace: (string?, string?) => Promise<any>;
+	groups: (string?) => Promise<any>;
 }

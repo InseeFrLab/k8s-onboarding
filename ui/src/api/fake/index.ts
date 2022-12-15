@@ -25,6 +25,7 @@ const api: API = {
 	}),
 	createNamespace: get({}),
 	setPermissionsToNamespace: get({}),
+	groups: get(['project-test1', 'project-test2']),
 };
 
 export default api;
