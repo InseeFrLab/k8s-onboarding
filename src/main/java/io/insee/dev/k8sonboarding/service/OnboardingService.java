@@ -185,10 +185,10 @@ public class OnboardingService {
 
 	private String getNamespaceId(User user, String group) {
 		if (group == null) {
-			return clusterProperty.getNamespacePrefix() + clusterProperty.getUserPrefix() + user.getId();
+			return clusterProperty.getNamespacePrefix() + user.getId();
 		}
 		String cleanedAndSanitizedGroup = sanitize(optionallyRemoveSuffix(group));
-		return clusterProperty.getNamespaceGroupPrefix() + clusterProperty.getGroupPrefix() + cleanedAndSanitizedGroup;
+		return clusterProperty.getNamespaceGroupPrefix() + cleanedAndSanitizedGroup;
 	}
 
 	private String optionallyRemoveSuffix(String rawGroup) {
