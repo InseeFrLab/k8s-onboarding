@@ -21,5 +21,6 @@ export interface OIDCCustomConfig {
 }
 
 export interface UIProperties extends OIDCCustomConfig {
-	userNamespaceEnabled?: string;
+	userNamespaceEnabled?: boolean;
+	userCanCreateNs?: boolean;
 }

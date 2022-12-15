@@ -13,7 +13,6 @@ import Credentials from 'model/Credentials';
 import React, { useEffect, useState } from 'react';
 import { exportTypes } from 'utils';
 import Welcome from './welcome';
-import { filterGroups } from 'utils/filter-groups';
 import { UIProperties } from 'model/Oidc';
 import './cluster.scss';
 
@@ -53,7 +52,15 @@ const DocCard = () => {
 	);
 };
 
-const Content = ({ token, group }: { token?: string; group?: string }) => {
+const Content = ({
+	token,
+	group,
+	namespaceCreationAllowed,
+}: {
+	token?: string;
+	group?: string;
+	namespaceCreationAllowed: boolean;
+}) => {
 	const [cluster, setCluster] = useState<Credentials>();
 	const [loading, setLoading] = useState(true);
 
@@ -71,12 +78,14 @@ const Content = ({ token, group }: { token?: string; group?: string }) => {
 	if (loading) return <Loader />;
 
 	if (!cluster?.onboarded)
-		return (
+		return namespaceCreationAllowed ? (
 			<Welcome
 				group={group}
 				credentials={cluster}
 				onFinish={() => getCredentials(token, group)}
 			/>
+		) : (
+			<NoopContent message="Pour ce cluster, pas de création de nouveaux namespace" />
 		);
 
 	return (
@@ -116,7 +125,7 @@ const Content = ({ token, group }: { token?: string; group?: string }) => {
 	);
 };
 
-const NoopContent = () => {
+const NoopContent = ({ message }: { message: string }) => {
 	return (
 		<Grid container className="cards" spacing={2}>
 			<Grid item lg={1} />
@@ -124,10 +133,7 @@ const NoopContent = () => {
 				<Card className="card" elevation={16}>
 					<CardHeader title="Information" className="card-title" />
 					<Divider />
-					<CardContent>
-						Pour ce cluster, aucune opération n'est possible côté namespace
-						utilisateur
-					</CardContent>
+					<CardContent>{message}</CardContent>
 				</Card>
 			</Grid>
 			<Grid item lg={4} md={4} xs={12}>
@@ -149,25 +155,41 @@ const Cluster = () => {
 	const [activePanel, setActivePanel] = useState(0);
 	const [config, setConfig] = useState({
 		groupFilter: '',
-		userEnabled: 'false',
+		userEnabled: false,
+		userCanCreateNs: false,
 	});
-	const { groupFilter, userEnabled } = config;
+	const { groupFilter, userEnabled, userCanCreateNs } = config;
 	const { accessToken, accessTokenPayload } = useOidcAccessToken();
-
+	const [groups, setGroups] = useState<string[]>([]);
 	useEffect(() => {
 		API.conf()
 			.then((r: UIProperties) => {
 				setConfig({
 					groupFilter: r.groupFilter || groupFilter,
 					userEnabled: r.userNamespaceEnabled || userEnabled,
+					userCanCreateNs: r.userCanCreateNs || userCanCreateNs,
 				});
 			})
 			.catch(() => {
 				console.error('error while fetch configuration');
 			});
-	}, [setConfig, groupFilter, userEnabled]);
+		API.groups(accessToken)
+			.then((groups: string[]) => {
+				setGroups(groups);
+			})
+			.catch(() => {
+				console.error('error while fetching available groups');
+			});
+	}, [
+		setConfig,
+		groupFilter,
+		userEnabled,
+		accessToken,
+		setGroups,
+		userCanCreateNs,
+	]);
 
-	const { name, preferred_username, email, groups } = accessTokenPayload as any;
+	const { name, preferred_username, email } = accessTokenPayload as any;
 
 	return (
 		<>
@@ -185,33 +207,34 @@ const Cluster = () => {
 			>
 				<Tab label={preferred_username} value={0} />
 
-				{groups &&
-					filterGroups(groups, groupFilter).map(
-						(group: string, index: number) => (
-							<Tab key={`tab-group-${index}`} label={group} value={index + 1} />
-						)
-					)}
+				{groups.map((group: string, index: number) => (
+					<Tab key={`tab-group-${index}`} label={group} value={index + 1} />
+				))}
 			</Tabs>
 			<Box m={4} />
 			<TabPanel value={activePanel} index={0}>
-				{userEnabled === 'true' ? (
-					<Content token={accessToken} />
+				{userEnabled ? (
+					<Content
+						token={accessToken}
+						namespaceCreationAllowed={userCanCreateNs}
+					/>
 				) : (
-					<NoopContent />
+					<NoopContent message="Pour ce cluster, aucune opération n'est possible côté namespace utilisateur" />
 				)}
 			</TabPanel>
-			{groups &&
-				filterGroups(groups, groupFilter).map(
-					(group: string, index: number) => (
-						<TabPanel
-							key={`panel-group-${index}`}
-							value={activePanel}
-							index={index + 1}
-						>
-							<Content token={accessToken} group={group} />
-						</TabPanel>
-					)
-				)}
+			{groups.map((group: string, index: number) => (
+				<TabPanel
+					key={`panel-group-${index}`}
+					value={activePanel}
+					index={index + 1}
+				>
+					<Content
+						token={accessToken}
+						group={group}
+						namespaceCreationAllowed={userCanCreateNs}
+					/>
+				</TabPanel>
+			))}
 		</>
 	);
 };
