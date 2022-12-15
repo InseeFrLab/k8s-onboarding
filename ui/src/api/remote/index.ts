@@ -32,7 +32,7 @@ const api: API = {
 		post(`api/cluster/namespace${group ? '/' + group : ''}`)(token),
 	setPermissionsToNamespace: (token: string, group?: string) =>
 		post(`api/cluster/permissions${group ? '/' + group : ''}`)(token),
-	groups: (token: string) => get(`/api/cluster/groups`)(token),
+	groups: (token: string) => get(`api/cluster/groups`)(token),
 };
 
 export default api;

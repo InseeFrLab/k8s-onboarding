@@ -26,7 +26,8 @@ public class ConfigurationController {
         appConfiguration.setAuthority(uiProperties.getAuthority());
         appConfiguration.setClientId(uiProperties.getClientId());
         appConfiguration.setGroupFilter(uiProperties.getGroupFilter());
-        appConfiguration.setUserNamespaceEnabled(uiProperties.getUserNamespaceEnabled());
+        appConfiguration.setUserNamespaceEnabled(uiProperties.isUserNamespaceEnabled());
+        appConfiguration.setUserCanCreateNs(uiProperties.isNamespaceCreationAllowed());
         return appConfiguration;
     }
 
