@@ -32,8 +32,4 @@ public class UserAccessController {
         onboardingService.addPermissionsToNamespace(userProvider.getUser(auth), null);
     }
 
-    @GetMapping("/groups")
-    public List<String> getAllowedGroupForUser(Authentication auth) {
-        return onboardingService.getAllowedAndFilteredGroupsForUser(userProvider.getUser(auth));
-    }
 }

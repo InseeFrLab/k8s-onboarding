@@ -41,5 +41,10 @@ public class ClusterAccessController {
     public void addPermissionsForUser(Authentication auth, @PathVariable String groupId) {
         onboardingService.addPermissionsToNamespace(userProvider.getUser(auth), groupId);
     }
+    
+    @GetMapping("/groups")
+    public List<String> getAllowedGroupForUser(Authentication auth) {
+        return onboardingService.getAllowedAndFilteredGroupsForUser(userProvider.getUser(auth));
+    }
 
 }
