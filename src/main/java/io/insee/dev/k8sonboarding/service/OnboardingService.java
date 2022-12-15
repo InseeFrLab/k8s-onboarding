@@ -195,7 +195,7 @@ public class OnboardingService {
 	private String optionallyRemoveSuffix(String rawGroup) {
 		String deepcopyOfRawGroup = rawGroup;
 		if (doesRemoveSuffix){
-			deepcopyOfRawGroup=StringUtils.substringBefore(deepcopyOfRawGroup, '_')
+			deepcopyOfRawGroup=StringUtils.substringBefore(deepcopyOfRawGroup, '_');
 			return deepcopyOfRawGroup;
 		}
 		return deepcopyOfRawGroup;
