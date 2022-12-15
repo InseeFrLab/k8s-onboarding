@@ -12,6 +12,8 @@ import io.insee.dev.k8sonboarding.configuration.security.UserProvider;
 import io.insee.dev.k8sonboarding.service.OnboardingService;
 import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/cluster")
 public class ClusterAccessController {
