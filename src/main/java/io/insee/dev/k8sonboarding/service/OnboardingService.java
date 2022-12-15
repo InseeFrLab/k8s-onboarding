@@ -187,15 +187,18 @@ public class OnboardingService {
 		if (group == null) {
 			return clusterProperty.getNamespacePrefix() + user.getId();
 		}
-		String cleanedAndSanitizedGroup = sanitize(optionallyRemoveSuffix(group));
+		String optionallyCleanedGroup = optionallyRemoveSuffix(group);
+		String cleanedAndSanitizedGroup = sanitize(optionallyCleanedGroup);
 		return clusterProperty.getNamespaceGroupPrefix() + cleanedAndSanitizedGroup;
 	}
 
 	private String optionallyRemoveSuffix(String rawGroup) {
+		String deepcopyOfRawGroup = rawGroup;
 		if (doesRemoveSuffix){
-			return StringUtils.substringBefore(rawGroup, '_');
+			deepcopyOfRawGroup=StringUtils.substringBefore(deepcopyOfRawGroup, '_')
+			return deepcopyOfRawGroup;
 		}
-		return rawGroup;
+		return deepcopyOfRawGroup;
 	}
 
 	private String sanitize(String cleanedGroup) {
