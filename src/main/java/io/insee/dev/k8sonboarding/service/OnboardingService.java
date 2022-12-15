@@ -235,7 +235,7 @@ public class OnboardingService {
 		).collect(Collectors.toList());
 	}
 
-	@Value("${io.insee.dev.k8sonboarding.ui.groupeFilter:.*}")
+	@Value("${io.insee.dev.k8sonboarding.ui.groupFilter:.*}")
 	private String groupFilter;
 	private boolean checkGroupMatchesFilter(String group) {
 		var groupFilterPattern = Pattern.compile(groupFilter);
