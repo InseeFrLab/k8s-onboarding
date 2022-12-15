@@ -7,7 +7,9 @@ public class AppConfiguration {
     private String authority;
     private String groupFilter;
 
-    private String userNamespaceEnabled;
+    private boolean userNamespaceEnabled;
+
+    private boolean userCanCreateNs;
 
     public AppConfiguration() {
         super();
@@ -53,11 +55,23 @@ public class AppConfiguration {
         this.groupFilter = groupFilter;
     }
 
-    public String getUserNamespaceEnabled() {
+    public boolean getUserNamespaceEnabled() {
         return userNamespaceEnabled;
     }
 
-    public void setUserNamespaceEnabled(String userNamespaceEnabled) {
+    public void setUserNamespaceEnabled(boolean userNamespaceEnabled) {
         this.userNamespaceEnabled = userNamespaceEnabled;
+    }
+
+    public boolean isUserNamespaceEnabled() {
+        return userNamespaceEnabled;
+    }
+
+    public boolean isUserCanCreateNs() {
+        return userCanCreateNs;
+    }
+
+    public void setUserCanCreateNs(boolean userCanCreateNs) {
+        this.userCanCreateNs = userCanCreateNs;
     }
 }

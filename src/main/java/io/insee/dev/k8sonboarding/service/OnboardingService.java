@@ -1,6 +1,10 @@
 package io.insee.dev.k8sonboarding.service;
 
+import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -219,4 +223,25 @@ public class OnboardingService {
 	public void setKubernetesClient(KubernetesClient kubernetesClient) {
 		this.kubernetesClient = kubernetesClient;
 	}
+
+	public List<String> getAllowedAndFilteredGroupsForUser(User user) {
+		List<String> allGroups = user.getGroups();
+		return allGroups
+		.stream()
+		.filter(
+				this::checkGroupMatchesFilter
+		).map(
+				this::optionallyRemoveSuffix
+		).collect(Collectors.toList());
+	}
+
+	@Value("${io.insee.dev.k8sonboarding.ui.groupeFilter:.*}")
+	private String groupFilter;
+	private boolean checkGroupMatchesFilter(String group) {
+		var groupFilterPattern = Pattern.compile(groupFilter);
+		Matcher m = groupFilterPattern.matcher(group);
+		return m.matches();
+	}
+
+
 }

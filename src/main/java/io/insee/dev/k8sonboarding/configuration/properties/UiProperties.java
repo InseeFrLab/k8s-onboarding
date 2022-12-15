@@ -10,7 +10,8 @@ public class UiProperties {
     private String clientId;
     private String authority;
     private String groupFilter;
-    private String userNamespaceEnabled;
+    private boolean userNamespaceEnabled;
+    private boolean namespaceCreationAllowed;
     public UiProperties() {
         super();
     }
@@ -39,11 +40,19 @@ public class UiProperties {
         this.groupFilter = groupFilter;
     }
 
-    public String getUserNamespaceEnabled() {
+    public boolean isUserNamespaceEnabled() {
         return userNamespaceEnabled;
     }
 
-    public void setUserNamespaceEnabled(String userNamespaceEnabled) {
+    public void setUserNamespaceEnabled(boolean userNamespaceEnabled) {
         this.userNamespaceEnabled = userNamespaceEnabled;
+    }
+
+    public boolean isNamespaceCreationAllowed() {
+        return namespaceCreationAllowed;
+    }
+
+    public void setNamespaceCreationAllowed(boolean namespaceCreationAllowed) {
+        this.namespaceCreationAllowed = namespaceCreationAllowed;
     }
 }
