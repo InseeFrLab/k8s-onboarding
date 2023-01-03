@@ -15,6 +15,7 @@ import { exportTypes } from 'utils';
 import Welcome from './welcome';
 import { UIProperties } from 'model/Oidc';
 import './cluster.scss';
+import { AllowedGroup } from 'model/Group';
 
 function TabPanel(props: any) {
 	const { children, value, index, ...other } = props;
@@ -54,35 +55,35 @@ const DocCard = () => {
 
 const Content = ({
 	token,
-	group,
+	allowedGroup,
 	namespaceCreationAllowed,
 }: {
 	token?: string;
-	group?: string;
+	allowedGroup?: AllowedGroup;
 	namespaceCreationAllowed: boolean;
 }) => {
 	const [cluster, setCluster] = useState<Credentials>();
 	const [loading, setLoading] = useState(true);
 
-	const getCredentials = (token?: string, group?: string) => {
-		API.cluster(token, group).then((c) => {
+	const getCredentials = (token?: string, allowedGroup?: string) => {
+		API.cluster(token, allowedGroup).then((c) => {
 			setCluster(c);
 			setLoading(false);
 		});
 	};
 
 	useEffect(() => {
-		getCredentials(token, group);
-	}, [token, group]);
+		getCredentials(token, allowedGroup?.namespace);
+	}, [token, allowedGroup]);
 
 	if (loading) return <Loader />;
 
 	if (!cluster?.onboarded)
 		return namespaceCreationAllowed ? (
 			<Welcome
-				group={group}
+				allowedGroup={allowedGroup}
 				credentials={cluster}
-				onFinish={() => getCredentials(token, group)}
+				onFinish={() => getCredentials(token, allowedGroup?.namespace)}
 			/>
 		) : (
 			<NoopContent message="Pour ce cluster, pas de création de nouveaux namespace" />
@@ -160,7 +161,7 @@ const Cluster = () => {
 	});
 	const { groupFilter, userEnabled, userCanCreateNs } = config;
 	const { accessToken, accessTokenPayload } = useOidcAccessToken();
-	const [groups, setGroups] = useState<string[]>([]);
+	const [groups, setGroups] = useState<AllowedGroup[]>([]);
 	useEffect(() => {
 		API.conf()
 			.then((r: UIProperties) => {
@@ -174,7 +175,7 @@ const Cluster = () => {
 				console.error('error while fetch configuration');
 			});
 		API.groups(accessToken)
-			.then((groups: string[]) => {
+			.then((groups: AllowedGroup[]) => {
 				setGroups(groups);
 			})
 			.catch(() => {
@@ -207,8 +208,12 @@ const Cluster = () => {
 			>
 				<Tab label={preferred_username} value={0} />
 
-				{groups.map((group: string, index: number) => (
-					<Tab key={`tab-group-${index}`} label={group} value={index + 1} />
+				{groups.map((allowedGroup: AllowedGroup, index: number) => (
+					<Tab
+						key={`tab-allowedGroup-${index}`}
+						label={allowedGroup.namespace}
+						value={index + 1}
+					/>
 				))}
 			</Tabs>
 			<Box m={4} />
@@ -222,15 +227,15 @@ const Cluster = () => {
 					<NoopContent message="Pour ce cluster, aucune opération n'est possible côté namespace utilisateur" />
 				)}
 			</TabPanel>
-			{groups.map((group: string, index: number) => (
+			{groups.map((allowedGroup: string, index: number) => (
 				<TabPanel
-					key={`panel-group-${index}`}
+					key={`panel-allowedGroup-${index}`}
 					value={activePanel}
 					index={index + 1}
 				>
 					<Content
 						token={accessToken}
-						group={group}
+						allowedGroup={allowedGroup}
 						namespaceCreationAllowed={userCanCreateNs}
 					/>
 				</TabPanel>

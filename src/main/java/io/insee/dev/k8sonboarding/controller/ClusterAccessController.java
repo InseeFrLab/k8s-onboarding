@@ -1,5 +1,6 @@
 package io.insee.dev.k8sonboarding.controller;
 
+import io.insee.dev.k8sonboarding.model.AllowedGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,7 @@ public class ClusterAccessController {
     }
     
     @GetMapping("/groups")
-    public List<String> getAllowedGroupForUser(Authentication auth) {
+    public List<AllowedGroup> getAllowedGroupForUser(Authentication auth) {
         return onboardingService.getAllowedAndFilteredGroupsForUser(userProvider.getUser(auth));
     }
 

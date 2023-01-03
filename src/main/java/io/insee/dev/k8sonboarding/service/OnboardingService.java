@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import io.insee.dev.k8sonboarding.model.AllowedGroup;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,13 +45,13 @@ public class OnboardingService {
 
 	public static final String NO_QUOTA_VALUE="0";
 	public static final String RESOURCE_QUOTA_REQUESTS_STORAGE = "requests.storage";
-	
+
 	@Value("${spring.application.name:k8s-onboarding}")
 	private String appName;
-	
+
 	@Autowired
     QuotaProperties quotaProperties;
-	
+
 	@Autowired
 	ClusterProperties clusterProperty;
 
@@ -62,6 +63,14 @@ public class OnboardingService {
 
 	@Value("${io.insee.dev.k8sonboarding.does-remove-suffix}")
 	private boolean doesRemoveSuffix;
+
+	public boolean isDoesRemoveSuffix() {
+		return doesRemoveSuffix;
+	}
+
+	public void setDoesRemoveSuffix(boolean doesRemoveSuffix) {
+		this.doesRemoveSuffix = doesRemoveSuffix;
+	}
 
 	public OnboardingService(ClusterProperties clusterProperty, KubernetesClientProvider kubernetesClientProvider) {
 		super();
@@ -81,14 +90,14 @@ public class OnboardingService {
 			logger.info("creating namespace {}", namespaceId);
 			Namespace ns = new NamespaceBuilder().withNewMetadata().withName(namespaceId)
 					.addToLabels(LABEL_CREATED_BY, appName).endMetadata().build();
-			kubernetesClient.namespaces().resource(ns).create();			
-	    
+			kubernetesClient.namespaces().resource(ns).create();
+
 	    applyQuotas(namespaceId, quotaProperties, true);
 		}
 	}
-	    
+
     /**
-     * 
+     *
      * @param namespaceId
      * @param inputQuota
      * @param overrideExisting
@@ -128,15 +137,16 @@ public class OnboardingService {
             }
         }
     }
-    
-    
+
+
 	/**
 	 * Currently, namespaceid is ignored
 	 *
 	 * @param user
 	 * @param group
+	 * @return RoleBinding created rolebinding
 	 */
-	public void addPermissionsToNamespace(User user, String group) {
+	public RoleBinding addPermissionsToNamespace(User user, String group) {
 		String namespaceId = getNamespaceId(user, group);
 		final String userId = getUserIdPrefixed(user.getId());
 		final String groupId = getGroupIdPrefixed(group);
@@ -152,19 +162,22 @@ public class OnboardingService {
 			} else {
 				bindingToCreate = bindingToCreate.withSubjects(new SubjectBuilder().withKind(GROUP).withName(groupId)
 						.withApiGroup(API_GROUP).withNamespace(namespaceId).build());
-			}		
-			kubernetesClient.resource(bindingToCreate.build()).inNamespace(namespaceId).create();
+			}
+			var roleBinding = bindingToCreate.build();
+			kubernetesClient.resource(roleBinding).inNamespace(namespaceId).create();
+			return roleBinding;
 		}
+		return null;
 	}
 
-	
+
 
       public boolean checkNamespaceExists(String namespaceId) {
 		final Namespace namespace = kubernetesClient.namespaces().withName(namespaceId).get();
 		return namespace != null;
 	}
 
-	public boolean checkPermissionsExists(String namespaceId) {	    
+	public boolean checkPermissionsExists(String namespaceId) {
 	    final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
 				.withName(clusterProperty.getNameNamespaceAdmin()).get();
 		return (roleBinding != null && !roleBinding.getSubjects().isEmpty());
@@ -183,7 +196,7 @@ public class OnboardingService {
 		return clusterCredentials;
 	}
 
-	private String getNamespaceId(User user, String group) {
+	public String getNamespaceId(User user, String group) {
 		if (group == null) {
 			return clusterProperty.getNamespacePrefix() + user.getId();
 		}
@@ -193,12 +206,11 @@ public class OnboardingService {
 	}
 
 	private String optionallyRemoveSuffix(String rawGroup) {
-		String deepcopyOfRawGroup = rawGroup;
 		if (doesRemoveSuffix){
-			deepcopyOfRawGroup=StringUtils.substringBefore(deepcopyOfRawGroup, '_');
-			return deepcopyOfRawGroup;
+			rawGroup=StringUtils.substringBefore(rawGroup, '_');
+			return rawGroup;
 		}
-		return deepcopyOfRawGroup;
+		return rawGroup;
 	}
 
 	private String sanitize(String cleanedGroup) {
@@ -215,7 +227,7 @@ public class OnboardingService {
 		return clusterProperty.getUserPrefix() + id;
 	}
 
-	private String getGroupIdPrefixed(String id) {
+	public String getGroupIdPrefixed(String id) {
 		return clusterProperty.getGroupPrefix() + id;
 	}
 
@@ -227,14 +239,14 @@ public class OnboardingService {
 		this.kubernetesClient = kubernetesClient;
 	}
 
-	public List<String> getAllowedAndFilteredGroupsForUser(User user) {
+	public List<AllowedGroup> getAllowedAndFilteredGroupsForUser(User user) {
 		List<String> allGroups = user.getGroups();
 		return allGroups
 		.stream()
 		.filter(
 				this::checkGroupMatchesFilter
 		).map(
-				this::optionallyRemoveSuffix
+				group -> new AllowedGroup(optionallyRemoveSuffix(group),group)
 		).collect(Collectors.toList());
 	}
 

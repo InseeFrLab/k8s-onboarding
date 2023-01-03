@@ -1,7 +1,18 @@
 package io.insee.dev.k8sonboarding.service;
 
+import io.fabric8.kubernetes.api.model.NamespaceBuilder;
+import io.fabric8.kubernetes.api.model.NamespaceList;
+import io.fabric8.kubernetes.api.model.NamespaceListBuilder;
+import io.fabric8.kubernetes.client.KubernetesClientBuilder;
+import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
+import io.fabric8.kubernetes.client.dsl.Resource;
+import io.insee.dev.k8sonboarding.configuration.KubernetesClientProvider;
+import jdk.jfr.Description;
 import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -13,28 +24,33 @@ import io.insee.dev.k8sonboarding.configuration.properties.ClusterProperties;
 import io.insee.dev.k8sonboarding.model.User;
 import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 
-@EnableKubernetesMockClient(crud = true)
+import static org.mockito.Mockito.mock;
+
 public class OnboardingServiceTests {
+	@Mock
+	KubernetesClientProvider kubernetesClientProvider = mock(KubernetesClientProvider.class);
+	@Mock
+	KubernetesClient kubernetesClient = mock(KubernetesClient.class);
+    private ClusterProperties clusterProperties = new ClusterProperties();
 
-    KubernetesClient client;
+    private User user = new User();
 
-    private final ClusterProperties clusterProperties;
-
-    private final User user;
-
-    public OnboardingServiceTests() {
-	super();
-	final ClusterProperties clusterProperties = Mockito.mock(ClusterProperties.class);
-	Mockito.when(clusterProperties.getNamespacePrefix()).thenReturn("namespaceprefix-");
-	Mockito.when(clusterProperties.getUserPrefix()).thenReturn("userprefix-");
-	Mockito.when(clusterProperties.getApiserverUrl()).thenReturn("apiserver-url");
-	this.clusterProperties = clusterProperties;
-	final User user = new User();
-	user.setId("id");
-	user.setAuthToken("authToken");
-	this.user = user;
-    }
-
+	private OnboardingService onboardingService;
+	@BeforeEach
+	public void setup(){
+		Mockito.when(kubernetesClientProvider.getKubernetesClient()).thenReturn(kubernetesClient);
+		this.onboardingService = new OnboardingService(clusterProperties,kubernetesClientProvider);
+		onboardingService.setDoesRemoveSuffix(true);
+		onboardingService.setKubernetesClient(kubernetesClient);
+		clusterProperties.setNamespacePrefix("namespaceprefix-");
+		clusterProperties.setUserPrefix("userprefix-");
+		clusterProperties.setGroupPrefix("grpprefix-");
+		clusterProperties.setNamespaceGroupPrefix("grpprefix-");
+		clusterProperties.setApiserverUrl("api-server-url");
+		final User user = new User();
+		user.setId("id");
+		user.setAuthToken("authToken");
+	}
 	/**
 
 	@Test
@@ -92,4 +108,23 @@ public class OnboardingServiceTests {
     }
 	 *
 	 */
+	@Test()
+	@Description("check that sanitization and removing suffix works on group namespace id")
+	public void getNamespaceIdShouldBeOk(){
+		String toSanitizeGroup = "observability_K8S-DEV";
+		String namespaceId = onboardingService.getNamespaceId(user,toSanitizeGroup);
+		var grpou = onboardingService.getGroupIdPrefixed(toSanitizeGroup);
+		System.out.println(grpou);
+		System.out.println(toSanitizeGroup);
+		Assertions.assertEquals("grpprefix-observability",namespaceId);
+	}
+	/*@Test
+	@Description("check that role correspond to real kubernetes objects")
+	public void addPermissionsToNamespaceTest(){
+		String toSanitizeGroup = "observability_k8s-dev";
+		var mockedNamespace = mock(NonNamespaceOperation.class);
+		Mockito.when(mockedNamespace);
+		Mockito.when(kubernetesClient.namespaces()).thenReturn(mockedNamespace);
+		var roleBinding = onboardingService.addPermissionsToNamespace(user,toSanitizeGroup);
+	}*/
 }
