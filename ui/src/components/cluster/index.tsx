@@ -227,7 +227,7 @@ const Cluster = () => {
 					<NoopContent message="Pour ce cluster, aucune opération n'est possible côté namespace utilisateur" />
 				)}
 			</TabPanel>
-			{groups.map((allowedGroup: string, index: number) => (
+			{groups.map((allowedGroup: AllowedGroup, index: number) => (
 				<TabPanel
 					key={`panel-allowedGroup-${index}`}
 					value={activePanel}
