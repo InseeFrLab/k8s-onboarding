@@ -1,5 +1,6 @@
 package io.insee.dev.k8sonboarding.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -34,7 +35,7 @@ import io.insee.dev.k8sonboarding.view.ClusterCredentials;
 @Service
 public class OnboardingService {
 
-    private static final Logger logger = LoggerFactory.getLogger(OnboardingService.class);
+	private static final Logger logger = LoggerFactory.getLogger(OnboardingService.class);
 
 	public static final String ADMIN = "admin";
 	public static final String API_GROUP = "rbac.authorization.k8s.io";
@@ -43,14 +44,14 @@ public class OnboardingService {
 	public static final String LABEL_CREATED_BY = "created_by";
 	public static final String CLUSTER_ROLE = "ClusterRole";
 
-	public static final String NO_QUOTA_VALUE="0";
+	public static final String NO_QUOTA_VALUE = "0";
 	public static final String RESOURCE_QUOTA_REQUESTS_STORAGE = "requests.storage";
 
 	@Value("${spring.application.name:k8s-onboarding}")
 	private String appName;
 
 	@Autowired
-    QuotaProperties quotaProperties;
+	QuotaProperties quotaProperties;
 
 	@Autowired
 	ClusterProperties clusterProperty;
@@ -92,52 +93,50 @@ public class OnboardingService {
 					.addToLabels(LABEL_CREATED_BY, appName).endMetadata().build();
 			kubernetesClient.namespaces().resource(ns).create();
 
-	    applyQuotas(namespaceId, quotaProperties, true);
+			applyQuotas(namespaceId, quotaProperties, true);
 		}
 	}
 
-    /**
-     *
-     * @param namespaceId
-     * @param inputQuota
-     * @param overrideExisting
-     */
-    private void applyQuotas(String namespaceId, QuotaProperties inputQuota, boolean overrideExisting) {
-        ResourceQuotaBuilder resourceQuotaBuilder = new ResourceQuotaBuilder();
-        resourceQuotaBuilder.withNewMetadata()
-                .withLabels(Map.of(LABEL_CREATED_BY, appName))
-                .withName(namespaceId)
-                .withNamespace(namespaceId)
-                .endMetadata();
+	/**
+	 *
+	 * @param namespaceId
+	 * @param inputQuota
+	 * @param overrideExisting
+	 */
+	private void applyQuotas(String namespaceId, QuotaProperties inputQuota, boolean overrideExisting) {
+		ResourceQuotaBuilder resourceQuotaBuilder = new ResourceQuotaBuilder();
+		resourceQuotaBuilder.withNewMetadata()
+				.withLabels(Map.of(LABEL_CREATED_BY, appName))
+				.withName(namespaceId)
+				.withNamespace(namespaceId)
+				.endMetadata();
 
-        Map<String, String> quotasToApply = inputQuota.asMap();
+		Map<String, String> quotasToApply = inputQuota.asMap();
 
-        if (quotasToApply.entrySet().stream().filter(e -> e.getValue() != null).count() == 0) {
-            return;
-        }
+		if (quotasToApply.entrySet().stream().filter(e -> e.getValue() != null).count() == 0) {
+			return;
+		}
 
-        ResourceQuotaFluent.SpecNested<ResourceQuotaBuilder> resourceQuotaBuilderSpecNested = resourceQuotaBuilder
-                .withNewSpec();
-        quotasToApply.entrySet().stream().filter(e -> e.getValue() != null).forEach(e -> resourceQuotaBuilderSpecNested.addToHard(e.getKey(),Quantity.parse(e.getValue())));
-        resourceQuotaBuilderSpecNested.endSpec();
+		ResourceQuotaFluent.SpecNested<ResourceQuotaBuilder> resourceQuotaBuilderSpecNested = resourceQuotaBuilder
+				.withNewSpec();
+		quotasToApply.entrySet().stream().filter(e -> e.getValue() != null)
+				.forEach(e -> resourceQuotaBuilderSpecNested.addToHard(e.getKey(), Quantity.parse(e.getValue())));
+		resourceQuotaBuilderSpecNested.endSpec();
 
-        ResourceQuota quota = resourceQuotaBuilder.build();
-        if (overrideExisting) {
-            kubernetesClient.resource(quota).inNamespace(namespaceId).createOrReplace();
-        }
-        else {
-            try {
-                kubernetesClient.resource(quota).inNamespace(namespaceId).create();
-            }
-            catch (KubernetesClientException e) {
-                if (e.getCode() != 409) {
-                    // This is not a "quota already in place" error
-                    throw e;
-                }
-            }
-        }
-    }
-
+		ResourceQuota quota = resourceQuotaBuilder.build();
+		if (overrideExisting) {
+			kubernetesClient.resource(quota).inNamespace(namespaceId).createOrReplace();
+		} else {
+			try {
+				kubernetesClient.resource(quota).inNamespace(namespaceId).create();
+			} catch (KubernetesClientException e) {
+				if (e.getCode() != 409) {
+					// This is not a "quota already in place" error
+					throw e;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Currently, namespaceid is ignored
@@ -170,15 +169,13 @@ public class OnboardingService {
 		return null;
 	}
 
-
-
-      public boolean checkNamespaceExists(String namespaceId) {
+	public boolean checkNamespaceExists(String namespaceId) {
 		final Namespace namespace = kubernetesClient.namespaces().withName(namespaceId).get();
 		return namespace != null;
 	}
 
 	public boolean checkPermissionsExists(String namespaceId) {
-	    final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
+		final RoleBinding roleBinding = kubernetesClient.rbac().roleBindings().inNamespace(namespaceId)
 				.withName(clusterProperty.getNameNamespaceAdmin()).get();
 		return (roleBinding != null && !roleBinding.getSubjects().isEmpty());
 	}
@@ -206,8 +203,8 @@ public class OnboardingService {
 	}
 
 	private String optionallyRemoveSuffix(String rawGroup) {
-		if (doesRemoveSuffix){
-			rawGroup=StringUtils.substringBefore(rawGroup, '_');
+		if (doesRemoveSuffix) {
+			rawGroup = StringUtils.substringBefore(rawGroup, '_');
 			return rawGroup;
 		}
 		return rawGroup;
@@ -240,23 +237,23 @@ public class OnboardingService {
 	}
 
 	public List<AllowedGroup> getAllowedAndFilteredGroupsForUser(User user) {
-		List<String> allGroups = user.getGroups();
+		List<String> allGroups = user.getGroups() == null ? new ArrayList<>() : user.getGroups();
 		return allGroups
-		.stream()
-		.filter(
-				this::checkGroupMatchesFilter
-		).map(
-				group -> new AllowedGroup(optionallyRemoveSuffix(group),group)
-		).collect(Collectors.toList());
+				.stream()
+				.filter(
+						this::checkGroupMatchesFilter)
+				.map(
+						group -> new AllowedGroup(optionallyRemoveSuffix(group), group))
+				.collect(Collectors.toList());
 	}
 
 	@Value("${io.insee.dev.k8sonboarding.ui.groupFilter:.*}")
 	private String groupFilter;
+
 	private boolean checkGroupMatchesFilter(String group) {
 		var groupFilterPattern = Pattern.compile(groupFilter);
 		Matcher m = groupFilterPattern.matcher(group);
 		return m.matches();
 	}
-
 
 }
