@@ -45,12 +45,12 @@
 		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>kubernetes-client</artifactId>
-			<version>6.1.1</version>
+			<version>6.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>kubernetes-server-mock</artifactId>
-			<version>6.1.1</version>
+			<version>6.6.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -110,7 +110,7 @@
 							<goal>yarn</goal>
 						</goals>
 						<configuration>
-							<!-- optional: The default argument is actually "install", so unless 
+							<!-- optional: The default argument is actually "install", so unless
 								you need to run some other yarn command, you can remove this whole <configuration> 
 								section. -->
 							<arguments>install</arguments>

@@ -7,7 +7,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import io.insee.dev.k8sonboarding.model.AllowedGroup;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +14,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import io.fabric8.kubernetes.api.model.rbac.RoleBinding;
+import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder;
+import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
+import io.fabric8.kubernetes.api.model.LimitRange;
+import io.fabric8.kubernetes.api.model.LimitRangeBuilder;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.NamespaceBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceQuota;
 import io.fabric8.kubernetes.api.model.ResourceQuotaBuilder;
 import io.fabric8.kubernetes.api.model.ResourceQuotaFluent;
-import io.fabric8.kubernetes.api.model.rbac.RoleBinding;
-import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder;
-import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
+import io.insee.dev.k8sonboarding.model.AllowedGroup;
+
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.insee.dev.k8sonboarding.configuration.KubernetesClientProvider;
@@ -94,6 +97,7 @@ public class OnboardingService {
 			kubernetesClient.namespaces().resource(ns).create();
 
 			applyQuotas(namespaceId, quotaProperties, true);
+			addDefaultLimitRange(namespaceId);
 		}
 	}
 
@@ -135,6 +139,38 @@ public class OnboardingService {
 					throw e;
 				}
 			}
+		}
+	}
+
+	/**
+	 *
+	 * @param namespaceId
+	 */
+	private void addDefaultLimitRange(String namespaceId) {
+		LimitRangeBuilder limitRangeBuilder = new LimitRangeBuilder();
+		limitRangeBuilder
+			.withNewMetadata()
+				.withLabels(Map.of(LABEL_CREATED_BY, appName))
+				.withName("container-limits-defaults")
+				.withNamespace(namespaceId)
+			.endMetadata()
+			.withNewSpec()
+				.withLimits()
+					.addNewLimit()
+						.addToDefault("cpu", new Quantity("1"))
+						.addToDefault("memory", new Quantity("1Gi"))
+						.addToDefaultRequest("cpu", new Quantity("1m"))
+						.addToDefaultRequest("memory", new Quantity("1Mi"))
+						.withType("Container")
+				.endLimit()
+			.endSpec();
+
+		LimitRange limitRange = limitRangeBuilder.build();
+
+		if (kubernetesClient.limitRanges().withName("container-limits-defaults").get() != null) {
+			kubernetesClient.resource(limitRange).update();
+		} else {
+			kubernetesClient.resource(limitRange).create();
 		}
 	}
 
