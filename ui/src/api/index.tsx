@@ -2,7 +2,7 @@ import fake from './fake';
 import remote from './remote';
 
 const getAPIPaths = () => {
-	if (process.env.REACT_APP_API_MODE === 'fake') return fake;
+	if (import.meta.env.VITE_API_MODE === 'fake') return fake;
 	return remote;
 };
 

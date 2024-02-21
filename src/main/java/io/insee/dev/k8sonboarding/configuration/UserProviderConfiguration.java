@@ -1,8 +1,13 @@
 package io.insee.dev.k8sonboarding.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import io.insee.dev.k8sonboarding.configuration.security.UserProvider;
@@ -11,20 +16,18 @@ import io.insee.dev.k8sonboarding.model.User;
 @Configuration
 public class UserProviderConfiguration {
 
-    @Value("${io.insee.dev.k8sonboarding.jwt.username-claim}")
-    private String usernameClaim;
-
-    @Value("${io.insee.dev.k8sonboarding.jwt.groups-claim:groups}")
-    private String groupsClaim;
-
     @Bean
     public UserProvider getUserProvider() {
         return auth -> {
             final User user = new User();
-            final Jwt jwt = (Jwt) auth.getPrincipal();
-            user.setId(jwt.getClaimAsString(usernameClaim));
-            user.setGroups(jwt.getClaimAsStringList(groupsClaim));
-            user.setAuthToken(jwt.getTokenValue());
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            user.setId(authentication.getPrincipal().toString());
+            List<String> roles = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .map(role -> role.replace("ROLE_", ""))
+                    .collect(Collectors.toList());
+            user.setGroups(roles);
+            user.setAuthToken(((Jwt) auth.getPrincipal()).getTokenValue());
             return user;
         };
     }

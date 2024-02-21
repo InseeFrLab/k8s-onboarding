@@ -1,4 +1,5 @@
 spring.security.oauth2.resourceserver.jwt.issuer-uri:
+io.insee.dev.k8sonboarding.authorized.urls: "*"
 springdoc.swagger-ui.path: "/api"
 
 io.insee.dev.k8sonboarding:

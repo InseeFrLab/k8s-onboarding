@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import useSWR from 'swr';
 import { Navigate } from 'react-router-dom';
 import { OidcProvider } from '@axa-fr/react-oidc';
-import { Loader } from 'components/commons';
-import API from 'api';
-import AppBar from 'components/commons/appbar';
+import { Loader } from './commons';
+import API from './../api/';
+import AppBar from './commons/appbar';
 import Root from './routes/root';
-import { buildOidcConfiguration } from 'utils/oidc/build-configuration';
-import { OIDCBaseConfig, OIDCCustomConfig } from 'model/Oidc';
-import fetcher from 'utils/fetcher';
+import { buildOidcConfiguration } from './../utils/oidc/build-configuration';
+import { OIDCBaseConfig, OIDCCustomConfig } from './../model/Oidc';
+import fetcher from './../utils/fetcher';
 
 const App = () => {
 	const [conf, setConf] = useState<OIDCCustomConfig>({});

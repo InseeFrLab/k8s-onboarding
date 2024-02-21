@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: onboarding
+data:
+  io.insee.dev.k8sonboarding.clusterName: ""
+  io.insee.dev.k8sonboarding.insecure: ""
+  io.insee.dev.k8sonboarding.apiserver-url: ""
+  io.insee.dev.k8sonboarding.user-prefix: ""
+  io.insee.dev.k8sonboarding.group-prefix: ""
+  io.insee.dev.k8sonboarding.namespace-prefix: ""
+  io.insee.dev.k8sonboarding.namespace-group-prefix: ""
+  io.insee.dev.k8sonboarding.name-namespace-admin: ""
+  io.insee.dev.k8sonboarding.jwt.username-claim: ""
+  spring.security.oauth2.resourceserver.jwt.issuer-uri: ""
+  spring.security.oauth2.resourceserver.jwt.jwk-set-uri: ""
+  io.insee.dev.k8sonboarding.ui.clientId: ""
+  io.insee.dev.k8sonboarding.ui.authority: ""
+  io.insee.dev.k8sonboarding.ui.groupFilter: ""
+  io.insee.dev.k8sonboarding.ui.user-namespace-enabled: ""
+  io.insee.dev.k8sonboarding.ui.namespace-creation-allowed: ""
+  io.insee.dev.k8sonboarding.namespace-quota.memoryRequests: ""
+  io.insee.dev.k8sonboarding.namespace-quota.cpuRequests: ""
+  io.insee.dev.k8sonboarding.namespace-quota.memoryLimits: ""
+  io.insee.dev.k8sonboarding.namespace-quota.cpuLimits: ""
+  io.insee.dev.k8sonboarding.namespace-quota.storageRequests: ""
+  io.insee.dev.k8sonboarding.namespace-quota.storageLimits: ""
+  io.insee.dev.k8sonboarding.namespace-quota.podsCount: ""
+  io.insee.dev.k8sonboarding.does-remove-suffix: ""

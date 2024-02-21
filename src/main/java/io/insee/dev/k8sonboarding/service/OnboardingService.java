@@ -20,7 +20,6 @@ import io.fabric8.kubernetes.api.model.NamespaceBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ResourceQuota;
 import io.fabric8.kubernetes.api.model.ResourceQuotaBuilder;
-import io.fabric8.kubernetes.api.model.ResourceQuotaFluent;
 import io.fabric8.kubernetes.api.model.rbac.RoleBinding;
 import io.fabric8.kubernetes.api.model.rbac.RoleBindingBuilder;
 import io.fabric8.kubernetes.api.model.rbac.SubjectBuilder;
@@ -62,7 +61,7 @@ public class OnboardingService {
 	@Autowired
 	private KubernetesClient kubernetesClient;
 
-	@Value("${io.insee.dev.k8sonboarding.does-remove-suffix}")
+	@Value("${io.insee.dev.k8sonboarding.does-remove-suffix:false}")
 	private boolean doesRemoveSuffix;
 
 	public boolean isDoesRemoveSuffix() {
@@ -117,7 +116,7 @@ public class OnboardingService {
 			return;
 		}
 
-		ResourceQuotaFluent.SpecNested<ResourceQuotaBuilder> resourceQuotaBuilderSpecNested = resourceQuotaBuilder
+		var resourceQuotaBuilderSpecNested = resourceQuotaBuilder
 				.withNewSpec();
 		quotasToApply.entrySet().stream().filter(e -> e.getValue() != null)
 				.forEach(e -> resourceQuotaBuilderSpecNested.addToHard(e.getKey(), Quantity.parse(e.getValue())));
@@ -125,7 +124,7 @@ public class OnboardingService {
 
 		ResourceQuota quota = resourceQuotaBuilder.build();
 		if (overrideExisting) {
-			kubernetesClient.resource(quota).inNamespace(namespaceId).createOrReplace();
+			kubernetesClient.resource(quota).inNamespace(namespaceId).createOr(t -> t.patch());
 		} else {
 			try {
 				kubernetesClient.resource(quota).inNamespace(namespaceId).create();

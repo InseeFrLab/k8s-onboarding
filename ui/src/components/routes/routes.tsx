@@ -1,4 +1,3 @@
-import React from 'react';
 import {
 	Route,
 	Routes as Switch,
@@ -6,7 +5,7 @@ import {
 	useLocation,
 } from 'react-router-dom';
 import { withOidcSecure } from '@axa-fr/react-oidc';
-import Cluster from 'components/cluster';
+import Cluster from './../cluster';
 
 const Routes = () => {
 	const { pathname } = useLocation();

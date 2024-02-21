@@ -1,0 +1,14 @@
+{
+    "appTitle": "Onboarding Kubernetes",
+    "appDescription": "Deploy ...",
+    "header_button_tutorial": "Get Started",
+    "loading": "Loading...",
+    "login": "Login",
+    "logout": "Logout",
+    "cardIdTitle": "Identifiers",
+    "cardDocTitle": "Documentation",
+    "docDescription": "See documentation and useful links for your deployment",
+    "btnCopyLabel": "copy into clipboard",
+    "btnSaveAsLabel": "Save",
+    "exportKubLabel": "Automatic configuration (script)"
+}

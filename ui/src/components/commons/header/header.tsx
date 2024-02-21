@@ -1,10 +1,10 @@
-import D from 'i18n';
-import React from 'react';
 import { Divider, Typography, Grid, Box } from '@mui/material/';
 import AppBar from '../appbar';
 import './header.scss';
+import { useTranslation } from 'react-i18next';
 
 const Header = () => {
+	const { t } = useTranslation();
 	return (
 		<>
 			<AppBar displayBtn />
@@ -17,7 +17,7 @@ const Header = () => {
 			>
 				<Grid>
 					<Typography variant="body1" gutterBottom className="description">
-						{D.appDescription}
+						{t('appDescription')}
 					</Typography>
 					{/*<Box m={2} />
 					 <Button

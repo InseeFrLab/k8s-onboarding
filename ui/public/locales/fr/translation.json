@@ -1,0 +1,14 @@
+{
+    "appTitle": "Onboarding Kubernetes",
+    "appDescription": "Déployer n'importe quelle application conteneurisée en décrivant complètement sa configuration, les différents modules applicatifs et leurs interactions",
+    "header_button_tutorial": "Suivre un pas à pas",
+    "loading": "Chargement ...",
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "cardIdTitle": "Identifiants",
+    "cardDocTitle": "Documentation",
+    "docDescription": "Consulter la documentation et les liens utiles à votre déploiement",
+    "btnCopyLabel": "copier dans le presse papier",
+    "btnSaveAsLabel": "Enregistrer",
+    "exportKubLabel": "Configuration automatique (script)"
+}
