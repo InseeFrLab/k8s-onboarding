@@ -1,16 +1,15 @@
-import React from 'react';
 import { useOidc } from '@axa-fr/react-oidc';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@mui/material/';
-import D from 'i18n';
 import PersonOutlineSharpIcon from '@mui/icons-material/PersonOutlineSharp';
 import './appbar.scss';
+import { useTranslation } from 'react-i18next';
 
 const AppBarBtn = () => {
 	const { logout, isAuthenticated } = useOidc();
 
 	const navigate = useNavigate();
-
+	const { t } = useTranslation();
 	const action: any = () => {
 		if (isAuthenticated) {
 			logout().then(() => navigate('/'));
@@ -18,7 +17,7 @@ const AppBarBtn = () => {
 			navigate('/cluster');
 		}
 	};
-	const label: string = isAuthenticated ? D.logout : D.login;
+	const label: string = isAuthenticated ? t('logout') : t('login');
 
 	return (
 		<Button

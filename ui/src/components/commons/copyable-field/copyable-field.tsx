@@ -1,10 +1,10 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { InputAdornment, Input, InputLabel, Typography } from '@mui/material';
 import FormControl from '@mui/material/FormControl';
 import { IconButton } from '@mui/material';
 import FileCopy from '@mui/icons-material/FileCopy';
-import D from 'i18n';
 import './copyable-field.scss';
+import { useTranslation } from 'react-i18next';
 interface Props {
 	value: string;
 	description?: string;
@@ -14,6 +14,7 @@ interface Props {
 }
 
 const CopyableField = ({ value, description, label, copy, row }: Props) => {
+	const { t } = useTranslation();
 	const ref = useRef();
 	const onCopy = () => {
 		navigator.clipboard.writeText(value);
@@ -36,7 +37,7 @@ const CopyableField = ({ value, description, label, copy, row }: Props) => {
 					endAdornment={
 						<InputAdornment position="end">
 							{copy ? (
-								<IconButton aria-label={D.btnCopyLabel} onClick={onCopy}>
+								<IconButton aria-label={t('btnCopyLabel')} onClick={onCopy}>
 									<FileCopy />
 								</IconButton>
 							) : null}

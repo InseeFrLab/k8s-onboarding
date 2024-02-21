@@ -1,4 +1,4 @@
-import getEnv from 'env';
+import getEnv from './../../env';
 import { API } from '../api';
 
 const get = (data: any) => () => Promise.resolve(data);

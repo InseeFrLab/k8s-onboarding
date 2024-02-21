@@ -1,22 +1,23 @@
-import React from 'react';
 import { FileCopy, Save } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 import { saveAs } from 'file-saver';
-import D from 'i18n';
+import { useTranslation } from 'react-i18next';
 
 const CopyButton = ({ content }: any) => {
+	const { t } = useTranslation();
 	const copy = () => {
 		navigator.clipboard.writeText(content);
 		return false;
 	};
 	return (
-		<IconButton aria-label={D.btnSaveAsLabel} onClick={copy}>
+		<IconButton aria-label={t('btnSaveAsLabel')} onClick={copy}>
 			<FileCopy />
 		</IconButton>
 	);
 };
 
 const ExportFileButton = ({ fileName, content }: any) => {
+	const { t } = useTranslation();
 	const save = () => {
 		var blob = new Blob([content], {
 			type: 'text/plain;charset=utf-8',
@@ -25,7 +26,7 @@ const ExportFileButton = ({ fileName, content }: any) => {
 		return false;
 	};
 	return (
-		<IconButton aria-label={D.btnCopyLabel} onClick={save}>
+		<IconButton aria-label={t('btnCopyLabel')} onClick={save}>
 			<Save />
 		</IconButton>
 	);

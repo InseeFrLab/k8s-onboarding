@@ -6,16 +6,16 @@ import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Divider from '@mui/material/Divider';
 import Grid from '@mui/material/Grid';
-import API from 'api';
-import { CopyableField, ExportCredentials, Loader } from 'components/commons';
-import D from 'i18n';
-import Credentials from 'model/Credentials';
-import React, { useEffect, useState } from 'react';
-import { exportTypes } from 'utils';
+import API from './../../api';
+import { CopyableField, ExportCredentials, Loader } from './../../components/commons';
+import Credentials from './../../model/Credentials';
+import { useEffect, useState } from 'react';
+import { exportTypes } from './../../utils';
 import Welcome from './welcome';
-import { UIProperties } from 'model/Oidc';
+import { UIProperties } from './../../model/Oidc';
 import './cluster.scss';
-import { AllowedGroup } from 'model/Group';
+import { AllowedGroup } from './../../model/Group';
+import { useTranslation } from 'react-i18next';
 
 function TabPanel(props: any) {
 	const { children, value, index, ...other } = props;
@@ -39,12 +39,13 @@ function TabPanel(props: any) {
 }
 
 const DocCard = () => {
+	const { t } = useTranslation();
 	return (
 		<Card className="card" elevation={16}>
-			<CardHeader title={D.cardDocTitle} className="card-title" />
+			<CardHeader title={t('cardDocTitle')} className="card-title" />
 			<Divider />
 			<CardContent>
-				<p>{D.docDescription}</p>
+				<p>{t('docDescription')}</p>
 				<a href="https://kubernetes.io/fr/docs/home/" className="git-link">
 					https://kubernetes.io/fr/docs/home/
 				</a>
@@ -64,7 +65,7 @@ const Content = ({
 }) => {
 	const [cluster, setCluster] = useState<Credentials>();
 	const [loading, setLoading] = useState(true);
-
+	const { t } = useTranslation();
 	const getCredentials = (token?: string, allowedGroup?: string) => {
 		API.cluster(token, allowedGroup).then((c) => {
 			setCluster(c);
@@ -94,7 +95,7 @@ const Content = ({
 			<Grid item lg={1} />
 			<Grid item lg={6} md={8} xs={12}>
 				<Card className="card" elevation={16}>
-					<CardHeader title={D.cardIdTitle} className="card-title" />
+					<CardHeader title={t('cardIdTitle')} className="card-title" />
 					<Divider />
 					<CardContent>
 						{fields.map(({ accessor, label }: any, i) => (
@@ -110,7 +111,7 @@ const Content = ({
 						<Divider />
 						<div className="row row-major">
 							<ExportCredentials
-								text={D.exportKubLabel}
+								text={t('exportKubLabel')}
 								exportTypes={exportTypes}
 								credentials={cluster}
 							/>
@@ -198,7 +199,7 @@ const Cluster = () => {
 			<p className="email">{email}</p>
 			<Divider />
 			<Tabs
-				onChange={(e, newValue) => setActivePanel(newValue)}
+				onChange={(_, newValue) => setActivePanel(newValue)}
 				value={activePanel}
 				indicatorColor="primary"
 				textColor="primary"

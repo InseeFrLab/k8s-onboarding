@@ -5,10 +5,10 @@ import StepLabel from '@mui/material/StepLabel';
 import Stepper from '@mui/material/Stepper';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
-import API from 'api';
-import { Loader } from 'components/commons';
-import Credentials from 'model/Credentials';
-import { AllowedGroup } from 'model/Group';
+import API from './../../../api';
+import { Loader } from './../../../components/commons';
+import Credentials from './../../../model/Credentials';
+import { AllowedGroup } from './../../../model/Group';
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
@@ -48,21 +48,18 @@ Cette plateforme est soumise aux conditions d'utilisations suivantes :
 * Limité aux applications opensource  
 * Limité aux données de test anonymisées  `;
 		case 1:
-			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc ${
-				isGroup
-					? ' créer un espace réservé pour le groupe ' + allowedGroup
-					: 'se créer un espace personnel'
-			}.  
+			return `Cette plateforme est partagée avec d'autres utilisateurs, on va donc ${isGroup
+				? ' créer un espace réservé pour le groupe ' + allowedGroup
+				: 'se créer un espace personnel'
+				}.  
 Pour simplifier, on va attribuer le namespace ${cluster.namespace}.  
-			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${
-				cluster.namespace
-			}`;
+			Note : dans la vraie vie, c'est équivalent à kubectl create namespace ${cluster.namespace
+				}`;
 		case 2:
-			return `Maintenant que le namespace a été créé, il nous faut attributer les droits ${
-				isGroup
-					? 'au groupe ' + allowedGroup
-					: "à l'utilisateur " + cluster.user
-			}`;
+			return `Maintenant que le namespace a été créé, il nous faut attributer les droits ${isGroup
+				? 'au groupe ' + allowedGroup
+				: "à l'utilisateur " + cluster.user
+				}`;
 		case 3:
 			return "C'est prêt :)";
 		default:

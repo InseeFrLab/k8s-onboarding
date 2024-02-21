@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.4</version>
+		<version>3.2.2</version>
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
@@ -45,12 +46,12 @@
 		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>kubernetes-client</artifactId>
-			<version>6.1.1</version>
+			<version>6.10.0</version>
 		</dependency>
 		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>kubernetes-server-mock</artifactId>
-			<version>6.1.1</version>
+			<version>6.10.0</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -62,23 +63,14 @@
 		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.6.11</version>
+			<version>1.7.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
 		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.security.oauth</groupId>
-			<artifactId>spring-security-oauth2</artifactId>
-			<version>2.5.2.RELEASE</version>
-		</dependency>
 	</dependencies>
-
-
-
 
 	<build>
 		<plugins>
@@ -86,16 +78,15 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.12.1</version>
+				<version>1.15.0</version>
 				<configuration>
 					<workingDirectory>ui</workingDirectory>
 					<installDirectory>target</installDirectory>
-					<yarnVersion>v1.22.19</yarnVersion>
-					<nodeVersion>v16.17.0</nodeVersion>
+					<yarnVersion>v1.22.21</yarnVersion>
+					<nodeVersion>v20.11.0</nodeVersion>
 				</configuration>
 				<executions>
 					<execution>
@@ -135,7 +126,7 @@
 						<configuration>
 							<target>
 								<copy todir="${project.build.directory}/classes/public">
-									<fileset dir="${project.basedir}/ui/build" />
+									<fileset dir="${project.basedir}/ui/dist" />
 								</copy>
 							</target>
 						</configuration>

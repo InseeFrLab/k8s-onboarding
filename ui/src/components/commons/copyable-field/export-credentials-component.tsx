@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Typography, Grid, Select, MenuItem } from '@mui/material/';
 import { ExportFileButton, CopyButton } from '../buttons';
 
-const ExportCredentialsField = ({ credentials, exportTypes, text }) => {
+const ExportCredentialsField = ({ credentials, exportTypes, text }: any) => {
 	const [exportTypeId, changeExportType] = useState(exportTypes[0].id);
-	const exportType = exportTypes.find((type) => type.id === exportTypeId);
+	const exportType = exportTypes.find((type: any) => type.id === exportTypeId);
 
-	const handleChange = (e) => changeExportType(e.target.value);
+	const handleChange = (e: any) => changeExportType(e.target.value);
 	return (
 		<React.Fragment>
 			<Grid
@@ -26,8 +26,8 @@ const ExportCredentialsField = ({ credentials, exportTypes, text }) => {
 							onChange={handleChange}
 							variant="standard"
 						>
-							{exportTypes.map(({ id, label }) => (
-								<MenuItem key={id} variant="body1" value={id}>
+							{exportTypes.map(({ id, label }: any) => (
+								<MenuItem key={id} value={id}>
 									{label}
 								</MenuItem>
 							))}

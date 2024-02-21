@@ -17,10 +17,10 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 @Configuration
 public class SwaggerConfiguration {
 
-    @Value("${io.insee.dev.k8sonboarding.swagger.oauth2.authUrl}")
+    @Value("${io.insee.dev.k8sonboarding.swagger.oauth2.authUrl:}")
     public String authUrl;
 
-    @Value("${io.insee.dev.k8sonboarding.swagger.oauth2.tokenUrl}")
+    @Value("${io.insee.dev.k8sonboarding.swagger.oauth2.tokenUrl:}")
     public String tokenUrl;
 
     public final String SCHEME = "oAuthScheme";

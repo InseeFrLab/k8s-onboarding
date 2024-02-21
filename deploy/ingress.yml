@@ -1,18 +1,18 @@
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: onboarding
-  annotations:
-    kubernetes.io/ingress.class: nginx
+  labels:
+    name: onboarding
 spec:
-  tls:
-    - hosts:
-        - onboarding.example.com
   rules:
     - host: onboarding.example.com
       http:
         paths:
-          - path: /
+          - pathType: Prefix
+            path: "/"
             backend:
-              serviceName: onboarding
-              servicePort: http
+              service:
+                name: onboarding
+                port:
+                  name: http
