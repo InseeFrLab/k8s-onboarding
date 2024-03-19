@@ -21,7 +21,7 @@ public class UserProviderConfiguration {
         return auth -> {
             final User user = new User();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            user.setId(authentication.getPrincipal().toString());
+            user.setId(authentication.getName());
             List<String> roles = authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .map(role -> role.replace("ROLE_", ""))
