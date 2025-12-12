@@ -1,6 +1,6 @@
 import { useOidc } from '@axa-fr/react-oidc';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@mui/material/';
+import { Button } from '@mui/material';
 import PersonOutlineSharpIcon from '@mui/icons-material/PersonOutlineSharp';
 import './appbar.scss';
 import { useTranslation } from 'react-i18next';

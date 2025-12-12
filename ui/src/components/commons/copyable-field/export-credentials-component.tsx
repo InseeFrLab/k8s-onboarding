@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Grid, Select, MenuItem } from '@mui/material/';
+import { Typography, Grid, Select, MenuItem } from '@mui/material';
 import { ExportFileButton, CopyButton } from '../buttons';
 
 const ExportCredentialsField = ({ credentials, exportTypes, text }: any) => {
@@ -15,11 +15,11 @@ const ExportCredentialsField = ({ credentials, exportTypes, text }: any) => {
 				justifyContent="space-between"
 				alignItems="baseline"
 			>
-				<Grid item container xs={10} justifyContent="flex-start">
-					<Grid item xs={7}>
+				<Grid container size={{ xs: 10}} justifyContent="flex-start">
+					<Grid size={{ xs: 7}}>
 						<Typography variant="body1">{text}</Typography>
 					</Grid>
-					<Grid item>
+					<Grid>
 						<Select
 							style={{ minWidth: 240 }}
 							value={exportTypeId}
@@ -34,14 +34,14 @@ const ExportCredentialsField = ({ credentials, exportTypes, text }: any) => {
 						</Select>
 					</Grid>
 				</Grid>
-				<Grid item container xs={2} justifyContent="flex-end">
-					<Grid item>
+				<Grid container size={{ xs: 2}} justifyContent="flex-end">
+					<Grid>
 						<ExportFileButton
 							fileName={exportType.fileName}
 							content={exportType.text(credentials)}
 						/>
 					</Grid>
-					<Grid item>
+					<Grid>
 						<CopyButton content={exportType.text(credentials)} />
 					</Grid>
 				</Grid>

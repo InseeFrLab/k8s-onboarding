@@ -1,7 +1,5 @@
 import { useRef } from 'react';
-import { InputAdornment, Input, InputLabel, Typography } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
-import { IconButton } from '@mui/material';
+import { InputAdornment, Input, InputLabel, Typography, FormControl,IconButton } from '@mui/material';
 import FileCopy from '@mui/icons-material/FileCopy';
 import './copyable-field.scss';
 import { useTranslation } from 'react-i18next';
@@ -15,7 +13,7 @@ interface Props {
 
 const CopyableField = ({ value, description, label, copy, row }: Props) => {
 	const { t } = useTranslation();
-	const ref = useRef();
+	const ref = useRef("");
 	const onCopy = () => {
 		navigator.clipboard.writeText(value);
 		return false;

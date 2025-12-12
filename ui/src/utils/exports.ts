@@ -1,4 +1,4 @@
-import Credentials from 'model/Credentials';
+import Credentials from './../model/Credentials';
 
 export const exportTypes = [
 	{
