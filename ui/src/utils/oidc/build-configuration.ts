@@ -1,4 +1,4 @@
-import { OIDCBaseConfig, OIDCCustomConfig } from 'model/Oidc';
+import { OIDCBaseConfig, OIDCCustomConfig } from './../../model/Oidc';
 
 export const buildOidcConfiguration =
 	(baseConfig: OIDCBaseConfig) => (customConfig: OIDCCustomConfig) => {

@@ -92,8 +92,7 @@ const Content = ({
 
 	return (
 		<Grid container className="cards" spacing={2}>
-			<Grid item lg={1} />
-			<Grid item lg={6} md={8} xs={12}>
+			<Grid size={{lg:6, md:8, xs:12}}>
 				<Card className="card" elevation={16}>
 					<CardHeader title={t('cardIdTitle')} className="card-title" />
 					<Divider />
@@ -119,10 +118,9 @@ const Content = ({
 					</CardContent>
 				</Card>
 			</Grid>
-			<Grid item lg={4} md={4} xs={12}>
+			<Grid size={{lg:4, md:4, xs:12}}>
 				<DocCard />
 			</Grid>
-			<Grid item lg={1} />
 		</Grid>
 	);
 };
@@ -130,15 +128,14 @@ const Content = ({
 const NoopContent = ({ message }: { message: string }) => {
 	return (
 		<Grid container className="cards" spacing={2}>
-			<Grid item lg={1} />
-			<Grid item lg={6} md={8} xs={12}>
+			<Grid size={{lg:6, md:8, xs:12}}>
 				<Card className="card" elevation={16}>
 					<CardHeader title="Information" className="card-title" />
 					<Divider />
 					<CardContent>{message}</CardContent>
 				</Card>
 			</Grid>
-			<Grid item lg={4} md={4} xs={12}>
+			<Grid size={{lg:4, md:4, xs:12}}>
 				<DocCard />
 			</Grid>
 		</Grid>
