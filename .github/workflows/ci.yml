@@ -22,7 +22,7 @@ jobs:
       - name: Build with Maven
         run: mvn -B package
       - name: Upload jar
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: jar
           path: target/k8s-onboarding-0.0.1-SNAPSHOT.jar
