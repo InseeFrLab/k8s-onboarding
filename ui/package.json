@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"license": "MIT",
 	"dependencies": {
-		"@axa-fr/react-oidc": "^7.18.5",
+		"@axa-fr/react-oidc": "^7.26.0",
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.1",
 		"@mui/icons-material": "^7.3.6",

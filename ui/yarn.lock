@@ -12,25 +12,25 @@
   resolved "https://registry.npmjs.org/@adobe/css-tools/-/css-tools-4.4.4.tgz"
   integrity sha512-Elp+iwUx5rN5+Y8xLt5/GRoG20WGoDCQ/1Fb+1LiGtvwbDavuSk0jhD/eZdckHAuzcDzccnkv+rEjyWfRx18gg==
 
-"@axa-fr/oidc-client-service-worker@7.18.5":
-  version "7.18.5"
-  resolved "https://registry.npmjs.org/@axa-fr/oidc-client-service-worker/-/oidc-client-service-worker-7.18.5.tgz"
-  integrity sha512-O3FKWRlsmNrmtN9jtRn76eaRmqaPkzE50Crs+NZm/clr07cBGvRTKOyrdVzZQetk/Z6jWJx8TYmM10yiI2cxhA==
+"@axa-fr/oidc-client-service-worker@7.26.0":
+  version "7.26.0"
+  resolved "https://registry.yarnpkg.com/@axa-fr/oidc-client-service-worker/-/oidc-client-service-worker-7.26.0.tgz#4c9c1d913f8467408f7654b1c9a48f0aac1f7d7f"
+  integrity sha512-g1KkG9bgkezaVLOn+j4zzKDlUihdDeTuG5tetX4AvDJZpmESRx3x8+PJ7HI+414z6da0iigAlHS+bBdmBgRn3g==
 
-"@axa-fr/oidc-client@7.18.5":
-  version "7.18.5"
-  resolved "https://registry.npmjs.org/@axa-fr/oidc-client/-/oidc-client-7.18.5.tgz"
-  integrity sha512-OagIEe/fHH1l5SGDv7Fx3xyTPAOnqzNfLQW1+Y2S5pfP77oopby+n8Mhc/0eJifrrmVonQ+epb8WxmN73OQL4A==
+"@axa-fr/oidc-client@7.26.0":
+  version "7.26.0"
+  resolved "https://registry.yarnpkg.com/@axa-fr/oidc-client/-/oidc-client-7.26.0.tgz#1aeb9223587ed26113328b98fbe222379a5dd1ba"
+  integrity sha512-atWufzZ/JOtZUtHkDxVMVqV4yba3sGcZKTSK0tgoACYjmBnYG8wTEIW76wNxZF2nFYAhocyEGzaZrucfKchWqA==
   dependencies:
-    "@axa-fr/oidc-client-service-worker" "7.18.5"
+    "@axa-fr/oidc-client-service-worker" "7.26.0"
 
-"@axa-fr/react-oidc@^7.18.5":
-  version "7.18.5"
-  resolved "https://registry.npmjs.org/@axa-fr/react-oidc/-/react-oidc-7.18.5.tgz"
-  integrity sha512-+lJfIau1MeFId3tpZOdMHCN/zZY4FL5mAZi6yu96uH7P8quQxW0KMbdig2ScgTbk/VxmuKUR5zrktQipPECPXA==
+"@axa-fr/react-oidc@^7.26.0":
+  version "7.26.0"
+  resolved "https://registry.yarnpkg.com/@axa-fr/react-oidc/-/react-oidc-7.26.0.tgz#a2189d19bcc15e501fce3de9a91824219ddea152"
+  integrity sha512-0ORG8oR6iMqPmkCFv4+6e+07y141dxkjXg0xwqXxT67MkSQh4s6eRBnpzr01XlLA1j3eWke3sMHLeA0dY68cVQ==
   dependencies:
-    "@axa-fr/oidc-client" "7.18.5"
-    "@axa-fr/oidc-client-service-worker" "7.18.5"
+    "@axa-fr/oidc-client" "7.26.0"
+    "@axa-fr/oidc-client-service-worker" "7.26.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.27.1":
   version "7.27.1"
@@ -922,7 +922,7 @@
     picocolors "^1.1.1"
     redent "^3.0.0"
 
-"@testing-library/react@^16.3.1":
+"@testing-library/react@^16.3.0":
   version "16.3.1"
   resolved "https://registry.yarnpkg.com/@testing-library/react/-/react-16.3.1.tgz#60a9f1f6a930399d9e41b506a8bf68dbf4831fe8"
   integrity sha512-gr4KtAWqIOQoucWYD/f6ki+j5chXfcPc74Col/6poTyqTmn7zRmodWahWRCp8tYd+GMqBonw6hstNzqjbs6gjw==
