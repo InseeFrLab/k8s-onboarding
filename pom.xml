@@ -46,12 +46,12 @@
 		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>kubernetes-client</artifactId>
-			<version>7.3.1</version>
+			<version>7.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>io.fabric8</groupId>
 			<artifactId>kubernetes-server-mock</artifactId>
-			<version>7.3.1</version>
+			<version>7.5.1</version>
 			<scope>test</scope>
 		</dependency>
 
